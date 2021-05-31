@@ -1,0 +1,275 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>标签化 uCore-SMP - Risc-V Extension N Implementation</title>
+        
+        
+
+
+        <!-- Custom HTML head -->
+        
+
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        
+        <link rel="icon" href="favicon.svg">
+        
+        
+        <link rel="shortcut icon" href="favicon.png">
+        
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        
+        <link rel="stylesheet" href="css/print.css" media="print">
+        
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        
+        <link rel="stylesheet" href="fonts/fonts.css">
+        
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> 简介</a></li><li class="chapter-item expanded "><a href="ch1_hardware.html"><strong aria-hidden="true">2.</strong> 硬件与模拟器</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch1_extN.html"><strong aria-hidden="true">2.1.</strong> N 扩展</a></li><li class="chapter-item expanded "><a href="ch1_use_of_user_mode_trap.html"><strong aria-hidden="true">2.2.</strong> 用户态中断的使用</a></li></ol></li><li class="chapter-item expanded "><a href="ch2_os.html"><strong aria-hidden="true">3.</strong> 操作系统</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch2_uCore.html" class="active"><strong aria-hidden="true">3.1.</strong> 标签化 uCore-SMP</a></li></ol></li><li class="chapter-item expanded "><a href="ch3_app.html"><strong aria-hidden="true">4.</strong> 应用程序</a></li><li class="chapter-item expanded "><a href="ch4_example.html"><strong aria-hidden="true">5.</strong> 成果示例</a></li><li class="chapter-item expanded "><a href="ch5_reference.html"><strong aria-hidden="true">6.</strong> 参考</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        
+                    </div>
+
+                    <h1 class="menu-title">Risc-V Extension N Implementation</h1>
+
+                    <div class="right-buttons">
+                        
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        
+                        
+                        
+
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="操作系统标签化-ucore-smp"><a class="header" href="#操作系统标签化-ucore-smp">操作系统：标签化 uCore-SMP</a></h1>
+<p>uCore-SMP 在设计时目标平台为 QEMU ，将其移植到 FPGA 平台主要需要解决如下问题：内存布局、时钟周期、页表项属性和硬盘外设。移植完成后，还需添加对标签系统的支持。代码仓库位于 https://github.com/TianhuaTao/uCore-SMP/tree/label-riscv 。</p>
+<h2 id="内存布局"><a class="header" href="#内存布局">内存布局</a></h2>
+<p>QEMU 中内存的起始地址为 0x80000000 ，而 FPGA 平台起始地址为 0x100000000 ，相应的内核启动地址也要调整到 0x100200000 ，这两个值需要在 <code>memory_layout.h</code> 和 <code>kernelld.py</code> 中进行修改。QEMU 中配置总内存空间为 128MB，而尽管 FPGA 平台有 2GB DRAM，由于内存带宽有限，uCore-SMP 在启动时又会将所有内存地址遍历并初始化。为了减少操作系统的启动等待时间，综合考虑内核和用户程序所需的内存空间，最终将可分配的内存限制在 32MB 。</p>
+<h2 id="时钟周期"><a class="header" href="#时钟周期">时钟周期</a></h2>
+<p>QEMU 中 CPU 运行频率（即 <code>cycle</code> 寄存器的增加频率）为 3GHz ，而实时时钟（RTC）频率（即 <code>time</code> 寄存器的增加频率）为 12.5MHz ；FPGA 平台上 CPU 频率为 100MHz ，RTC 频率为 10MHz，需要在 <code>timer.h</code> 中修改。</p>
+<h2 id="页表项属性"><a class="header" href="#页表项属性">页表项属性</a></h2>
+<p>根据 RISC-V 规范中虚拟内存章节的描述，页表项中有“已访问（A）”和“已修改（D）”两个标志位，对这两个标志位，规范允许两种处理方式：</p>
+<blockquote>
+<ul>
+<li>When a virtual page is accessed and the A bit is clear, or is written and the D bit is clear, a page-fault exception is raised.</li>
+<li>When a virtual page is accessed and the A bit is clear, or is written and the D bit is clear, the implementation sets the corresponding bit(s) in the PTE. The PTE update must be atomic with respect to other accesses to the PTE, and must atomically check that the PTE is valid and grants sufficient permissions. The PTE update must be exact (i.e., not speculative), and observed in program order by the local hart. Furthermore, the PTE update must appear in the global memory order no later than the explicit memory access, or any subsequent explicit memory access to that virtual page by the local hart. The ordering on loads and stores provided by FENCE instructions and the acquire/release bits on atomic instructions also orders the PTE updates associated with those loads and stores as observed by remote harts.</li>
+</ul>
+</blockquote>
+<p>即直接触发页错误异常，或由硬件实现直接对页表项置位。FPGA 平台实现为前一种，而 QEMU 为后一种。这两个标志位主要应用于虚拟存储系统中的页面置换，而 uCore-SMP 中对此并无支持，简单起见，可修改 <code>virtual.c</code> ，在分配新的页表项并映射物理页时，直接将 A 和 D 置位。</p>
+<h2 id="硬盘外设"><a class="header" href="#硬盘外设">硬盘外设</a></h2>
+<p>QEMU 中通过 virtio 提供了虚拟块存储设备，FPGA 平台中没有。在此情况下，为了仍然能够使用文件系统，陶天骅同学提供了虚拟磁盘接口和 ramdisk 功能，通过宏开关在编译期进行切换。系统初始化时， ramdisk 将在内存中开辟一块区域，并将其按照 nfs 格式进行初始化。</p>
+<h2 id="标签系统"><a class="header" href="#标签系统">标签系统</a></h2>
+<p>在内核初始化时，将标签系统控制平面基址以恒等映射挂载到 0x20000 地址处，权限为内核可读写。读取和写入参数的方式为基址+偏移，偏移量单位为 32bit ，即需要将地址强制转换为指向 32 位无符号整数的指针类型。具体各参数的偏移量和写入方法见 <code>dsid.c/h</code> 。</p>
+<p>目前该系统支持至多 8 个不同的进程标签。进程标签存储于进程控制块中，在程序上下文切换时，内核将标签写入相应的 CSR 。内核的进程标签硬编码为 0 。</p>
+<p>内核提供三个和标签相关的系统调用：</p>
+<pre><code class="language-c">int set_dsid(int pid, uint32 dsid);
+int set_dsid_param(uint32 dsid, uint32 freq, uint32 size, uint32 inc, uint32 mask);
+uint32 get_l2_traffic(uint32 dsid);
+</code></pre>
+<ul>
+<li><code>set_dsid</code> 将 <code>pid</code> 对应进程的标签设为 <code>dsid</code> ，若进程不存在，则返回 -1 ，否则返回 0 ；</li>
+<li><code>set_dsid_param</code> 设置 <code>dsid</code> 标签相应的令牌桶参数和缓存掩码，参数含义见<a href="#%E7%A1%AC%E4%BB%B6">“硬件”章节</a>。只有非零的参数会被写入控制平面。</li>
+<li><code>get_l2_traffic</code> 读取 <code>dsid</code> 标签对应的 L1 和 L2 缓存之间的数据流量，单位为 64bit 。</li>
+</ul>
+<h2 id="与内核共同调试和-debug"><a class="header" href="#与内核共同调试和-debug">与内核共同调试和 debug</a></h2>
+<p>标签系统开发过程中，主要查出内核中以下几个缺陷。</p>
+<h3 id="调度器初值"><a class="header" href="#调度器初值">调度器初值</a></h3>
+<p>uCore-SMP 使用 stride 算法进行调度，在初始实现中，fork 产生的子进程的 stride 会置为 0 。在使用标签系统监测负载程序的缓存性能时，设置父进程每隔一秒输出一次信息。第一批负载表现正常，但启动第二波负载时，会出现直到负载运行结束父进程才会输出的情况。分析后发现，由于子进程 stride 为 0 ，而运行第二波负载时，父进程已有一定的 stride ，此时调度器会持续优先调度子进程，导致父进程陷入“饥饿”。解决方法为，将子进程的 stride 置为和父进程相同。</p>
+<h3 id="子进程回收内存泄露"><a class="header" href="#子进程回收内存泄露">子进程回收内存泄露</a></h3>
+<p>初始实现中，若父进程没有使用 wait/waitpid 等待子进程结束，则子进程占用的内存和文件等资源在进程结束后不会被回收，当大量 fork 时会耗尽系统内存。为此，陶天骅同学在内核中加入了 reparent 机制，当进程退出时会检查其子进程，若子进程已退出则回收，否则将其父进程置为 NULL ；若退出的进程父进程为 NULL ，则立即回收自身占用的资源，这样解决了这一内存泄露问题。</p>
+<h3 id="syscall-中的悬垂指针"><a class="header" href="#syscall-中的悬垂指针">syscall 中的悬垂指针</a></h3>
+<p>系统调用进入内核中 syscall 函数时，会保存进程的 trapframe 地址，在具体系统调用执行完成后，使用该地址中的 a0 寄存器保存系统调用的返回值。在运行标签负载时发现，当用户程序运行到 0x1070 地址（用户态下的虚拟地址）时会触发非法指令异常，stval 寄存器显示相应的指令值为 0 ，但查看相应程序的反汇编发现此处并非 0 。起初怀疑是固件中非对齐 load/store 模拟存在问题，导致加载用户程序时出现数据异常；尽管发现固件确实存在问题，但解决该问题后依然会触发非法指令异常。</p>
+<p>后来使用内核中 pushtrace 工具在各处记录 0x1070 对应内存地址的数值发现，当执行 execv 系统调用时，会回收原有的 trapframe 内存页，该页可能被后续用于加载用户程序的代码段，程序分配的新 trapframe 的 a0 和 a1 寄存器会分别用于存储 <code>argc</code> 和 <code>argv</code> ；但 execv 执行完成返回 syscall 函数中时（其返回值总为 0 ），仍会使用旧的 trapframe 地址，而 a0 寄存器对应变量在 trapframe 中相应的偏移量即为 0x70 ，向其中写入 0 会破坏用户程序代码，导致错误。解决方法为，当系统调用为 execv 时，在 syscall 函数中不写入 <code>trapframe-&gt;a0</code> 。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="ch2_os.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="ch3_app.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a rel="prev" href="ch2_os.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a rel="next" href="ch3_app.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>
