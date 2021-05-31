@@ -283,19 +283,19 @@ io_uring 测例</li>
 </li>
 <li><a href="ch1_extN.html#n-%E6%89%A9%E5%B1%95%E7%9A%84-csr">N 扩展的 CSR</a>
 <ul>
-<li><a href="ch1_extN.html#ustatus"><code>ustatus</code></a></li>
-<li><a href="ch1_extN.html#uip-uie"><code>uip</code> <code>uie</code></a></li>
-<li><a href="ch1_extN.html#sedeleg-sideleg"><code>sedeleg</code> <code>sideleg</code></a></li>
-<li><a href="ch1_extN.html#uscratch"><code>uscratch</code></a></li>
-<li><a href="ch1_extN.html#uepc"><code>uepc</code></a></li>
-<li><a href="ch1_extN.html#ucause"><code>ucause</code></a></li>
-<li><a href="ch1_extN.html#utvec"><code>utvec</code></a></li>
-<li><a href="ch1_extN.html#utval"><code>utval</code></a></li>
+<li><a href="ch1_extN.html#ustatus">ustatus</a></li>
+<li><a href="ch1_extN.html#uip-uie">uip<code> </code>uie</a></li>
+<li><a href="ch1_extN.html#sedeleg-sideleg">sedeleg<code> </code>sideleg</a></li>
+<li><a href="ch1_extN.html#uscratch">uscratch</a></li>
+<li><a href="ch1_extN.html#uepc">uepc</a></li>
+<li><a href="ch1_extN.html#ucause">ucause</a></li>
+<li><a href="ch1_extN.html#utvec">utvec</a></li>
+<li><a href="ch1_extN.html#utval">utval</a></li>
 </ul>
 </li>
 <li><a href="ch1_extN.html#n-%E6%89%A9%E5%B1%95%E7%9A%84%E6%8C%87%E4%BB%A4">N 扩展的指令</a>
 <ul>
-<li><a href="ch1_extN.html#uret"><code>URET</code></a></li>
+<li><a href="ch1_extN.html#uret">URET</a></li>
 </ul>
 </li>
 </ul>
@@ -344,7 +344,7 @@ io_uring 测例</li>
 <blockquote>
 <p>WPRI: 该段数值保留为以后使用，欲读取该位时得到合法的值，即 0</p>
 </blockquote>
-<h3 id="ustatus"><a class="header" href="#ustatus"><code>ustatus</code></a></h3>
+<h3 id="ustatus"><a class="header" href="#ustatus">ustatus</a></h3>
 <pre><code>UXLEN-1 5   4    3  1    0
 ┌────────┬──────┬──────┬─────┐
 │  WPRI  │ UPIE │ WPRI │ UIE │
@@ -356,7 +356,7 @@ io_uring 测例</li>
 <p>UIE 和 UPIE 是 <code>mstatus</code> 和 <code>sstatus</code> 中对应位的镜像。在硬件实现中三者可以是同一寄存器。</p>
 <p>指令 URET 用于从陷入状态返回用户态。URET 将 UPIE 复制回 UIE，然后将 UPIE 置位，最后将 <code>uepc</code> 拷贝至 <code>pc</code>。</p>
 <p>用户态中断只能在用户态触发，所以不需要 UPP 位。</p>
-<h3 id="uip-uie"><a class="header" href="#uip-uie"><code>uip</code> <code>uie</code></a></h3>
+<h3 id="uip-uie"><a class="header" href="#uip-uie">uip<code> </code>uie</a></h3>
 <p><code>uip</code> 和 <code>uie</code> 均为 UXLEN 位的读写寄存器，其中 <code>uip</code> 存储等待处理的中断信息， <code>uie</code> 存储相应的中断使能位。</p>
 <pre><code>| WPRI | UEIP | WPRI | UTIP | WPRI | USIP |
 
@@ -368,7 +368,7 @@ io_uring 测例</li>
 <p>如果 <code>uip</code> 寄存器中的 UTIP 位被置位，一个用户态定时器中断将进入待处理状态。当 <code>uie</code> 寄存器中的 UTIE 位被置零时，用户态定时器中断被禁用。ABI 应该提供一个机制来清除一个待定的定时器中断。</p>
 <p>如果 <code>uip</code> 寄存器中的 UEIP 位被置位，一个用户态外部中断将进入待处理状态。当 <code>uie</code> 寄存器中的 UEIE 位被置位时，用户态外部中断被禁用。ABI 应该提供屏蔽、解除屏蔽和查询外部中断原因的机制。</p>
 <p><code>uip</code> 和 <code>uie</code> 寄存器是 <code>mip</code> 和 <code>mie</code> 寄存器的子集。读取 <code>uip</code>/<code>uie</code> 的任何字段，或者写入任何可写字段，都会对 <code>mip</code>/<code>mie</code> 的相应字段进行读取或写入。如果系统实现了 S 模式，<code>uip</code> 和 <code>uie</code> 寄存器也是 <code>sip</code> 和 <code>sie</code> 寄存器的子集。</p>
-<h3 id="sedeleg-sideleg"><a class="header" href="#sedeleg-sideleg"><code>sedeleg</code> <code>sideleg</code></a></h3>
+<h3 id="sedeleg-sideleg"><a class="header" href="#sedeleg-sideleg">sedeleg<code> </code>sideleg</a></h3>
 <p>为提升中断和异常的处理性能，可以实现独立的读写寄存器 <code>sedeleg</code> 和 <code>sideleg</code>，设置其中的位将特定的中断和异常交由用户态陷入处理程序处理。</p>
 <p>当一个陷入被委托给一个权限较低的模式 u 时，<code>ucause</code> 寄存器被写入陷阱的原因；<code>uepc</code> 寄存器被写入发生陷阱的指令的虚拟地址；<code>utval</code> 寄存器被写入一个特定的异常数据；<code>mstatus</code> 的 UPIE 字段被写入陷阱发生时 UIE 字段的值；<code>mstatus</code> 的 UIE 字段被清零。<code>mcause</code>/<code>scause</code> 和 <code>mepc</code>/<code>sepc</code> 寄存器以及 <code>mstatus</code> 的 MPP 和 MPIE 字段不被写入。</p>
 <p>一个实现不应硬性规定任何委托位为一，也就是说，任何可以被委托的陷阱都必须支持不被委托。一个实现方案是选择可委托的陷入的子集。支持的可委托位可通过向每个比特位置写 1，然后读回 <code>medeleg</code>/<code>sedeleg</code> 或 <code>mideleg</code>/<code>sideleg</code> 中的值，看看哪些位上有 1。</p>
@@ -376,17 +376,17 @@ io_uring 测例</li>
 <p>目前，不支持触发低权限级的陷入</p>
 </blockquote>
 <p>不会在用户态发生的应硬件恒零，如 ECall from S/H/M-mode</p>
-<h3 id="uscratch"><a class="header" href="#uscratch"><code>uscratch</code></a></h3>
+<h3 id="uscratch"><a class="header" href="#uscratch">uscratch</a></h3>
 <p><code>uscratch</code> 寄存器是一个 UXLEN 位读/写寄存器。</p>
-<h3 id="uepc"><a class="header" href="#uepc"><code>uepc</code></a></h3>
+<h3 id="uepc"><a class="header" href="#uepc">uepc</a></h3>
 <p><code>uepc</code> 是 UXLEN 位读写寄存器。最低位（<code>uepc[0]</code>）恒零。次低位 <code>uepc[1]</code> 视实现的对齐需求而定。</p>
 <p><code>uepc</code> 是 WARL 寄存器，应能存储所有的合法物理/虚拟地址，但不需要能挣钱存储非法地址。实现可以先将非法地址转为其他非法地址再写入 <code>uepc</code>。</p>
 <p>但陷入在用户态处理时，<code>uepc</code> 被写入中断或触发异常的指令的虚拟地址。此外，除了软件显式地写，否则 <code>uepc</code> 应永不被写。</p>
-<h3 id="ucause"><a class="header" href="#ucause"><code>ucause</code></a></h3>
+<h3 id="ucause"><a class="header" href="#ucause">ucause</a></h3>
 <pre><code>| Interrupt | Exception Code WLRL |
 </code></pre>
 <p><code>ucause</code> 是 UXLEN 位长读写寄存器。</p>
-<h3 id="utvec"><a class="header" href="#utvec"><code>utvec</code></a></h3>
+<h3 id="utvec"><a class="header" href="#utvec">utvec</a></h3>
 <pre><code>| BASE[UXLEN-1 : 2] | MODE |
 </code></pre>
 <p><code>utvec</code> 是 UXLEN 位长读写寄存器，存储陷入向量，包括向量基地址和向量模式。</p>
@@ -396,10 +396,10 @@ io_uring 测例</li>
 <tr><td>1</td><td>vectored</td><td>base + 4 * cause</td></tr>
 <tr><td></td><td></td><td>reserved</td></tr>
 </tbody></table>
-<h3 id="utval"><a class="header" href="#utval"><code>utval</code></a></h3>
+<h3 id="utval"><a class="header" href="#utval">utval</a></h3>
 <p>存储内容仍在讨论中</p>
 <h2 id="n-扩展的指令"><a class="header" href="#n-扩展的指令">N 扩展的指令</a></h2>
-<h3 id="uret"><a class="header" href="#uret"><code>URET</code></a></h3>
+<h3 id="uret"><a class="header" href="#uret">URET</a></h3>
 <p><code>uret</code> 将 <code>pc</code> 设置为 <code>uepc</code> ，将 <code>ustatus.UIE</code> 设置为 <code>ustatus.UPIE</code> ，从而恢复中断前的状态。</p>
 <div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="用户态中断的使用"><a class="header" href="#用户态中断的使用">用户态中断的使用</a></h1>
 <blockquote>
