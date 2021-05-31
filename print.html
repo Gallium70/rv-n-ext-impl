@@ -254,8 +254,6 @@ io_uring 测例</li>
 <p>一个使用修改后的 QEMU 进行的用户态中断的简单测试结果：</p>
 <p><img src="assets/user_mode_trap_test.png" alt="user mode trap test" /></p>
 <p>图中的 <code>user soft</code> 为用户态的中断处理程序接收到 <code>user soft interrupt</code> 后输出的信息，<code>user mode</code> 为用户态程序输出的信息。</p>
-<h3 id="n-扩展实现简述"><a class="header" href="#n-扩展实现简述">N 扩展实现简述</a></h3>
-<p>QEMU 的中断检测方式为每个 block 运行前后调用 <code>riscv_cpu_local_irq_pending</code> 函数。其中会查看 <code>mip</code> 是否非零，非零位对应的 <code>mie</code> 是否非零。同时检查特权级和相应的 <code>mideleg</code> <code>medeleg</code> 寄存器与 <code>mstatus.XIE</code> 的全局中断使能位。</p>
 <h2 id="labeled-risc-v-cpu"><a class="header" href="#labeled-risc-v-cpu">Labeled RISC-V CPU</a></h2>
 <h3 id="设计目标"><a class="header" href="#设计目标">设计目标</a></h3>
 <p>本设计将 uCore-SMP 系统适配到标签化 RISC-V 架构的 FPGA 版本上，并基于二者在内核中实现调度进程所使用的 LLC 和内存带宽资源的功能，提供相应的接口和演示程序，对资源调度的效果进行展示。</p>
