@@ -284,8 +284,8 @@ io_uring 测例</li>
 <li><a href="ch1_extN.html#n-%E6%89%A9%E5%B1%95%E7%9A%84-csr">N 扩展的 CSR</a>
 <ul>
 <li><a href="ch1_extN.html#ustatus">ustatus</a></li>
-<li><a href="ch1_extN.html#uip-uie">uip<code> </code>uie</a></li>
-<li><a href="ch1_extN.html#sedeleg-sideleg">sedeleg<code> </code>sideleg</a></li>
+<li><a href="ch1_extN.html#uip-uie">uip uie</a></li>
+<li><a href="ch1_extN.html#sedeleg-sideleg">sedeleg sideleg</a></li>
 <li><a href="ch1_extN.html#uscratch">uscratch</a></li>
 <li><a href="ch1_extN.html#uepc">uepc</a></li>
 <li><a href="ch1_extN.html#ucause">ucause</a></li>
@@ -356,7 +356,7 @@ io_uring 测例</li>
 <p>UIE 和 UPIE 是 <code>mstatus</code> 和 <code>sstatus</code> 中对应位的镜像。在硬件实现中三者可以是同一寄存器。</p>
 <p>指令 URET 用于从陷入状态返回用户态。URET 将 UPIE 复制回 UIE，然后将 UPIE 置位，最后将 <code>uepc</code> 拷贝至 <code>pc</code>。</p>
 <p>用户态中断只能在用户态触发，所以不需要 UPP 位。</p>
-<h3 id="uip-uie"><a class="header" href="#uip-uie">uip<code> </code>uie</a></h3>
+<h3 id="uip-uie"><a class="header" href="#uip-uie">uip uie</a></h3>
 <p><code>uip</code> 和 <code>uie</code> 均为 UXLEN 位的读写寄存器，其中 <code>uip</code> 存储等待处理的中断信息， <code>uie</code> 存储相应的中断使能位。</p>
 <pre><code>| WPRI | UEIP | WPRI | UTIP | WPRI | USIP |
 
@@ -368,7 +368,7 @@ io_uring 测例</li>
 <p>如果 <code>uip</code> 寄存器中的 UTIP 位被置位，一个用户态定时器中断将进入待处理状态。当 <code>uie</code> 寄存器中的 UTIE 位被置零时，用户态定时器中断被禁用。ABI 应该提供一个机制来清除一个待定的定时器中断。</p>
 <p>如果 <code>uip</code> 寄存器中的 UEIP 位被置位，一个用户态外部中断将进入待处理状态。当 <code>uie</code> 寄存器中的 UEIE 位被置位时，用户态外部中断被禁用。ABI 应该提供屏蔽、解除屏蔽和查询外部中断原因的机制。</p>
 <p><code>uip</code> 和 <code>uie</code> 寄存器是 <code>mip</code> 和 <code>mie</code> 寄存器的子集。读取 <code>uip</code>/<code>uie</code> 的任何字段，或者写入任何可写字段，都会对 <code>mip</code>/<code>mie</code> 的相应字段进行读取或写入。如果系统实现了 S 模式，<code>uip</code> 和 <code>uie</code> 寄存器也是 <code>sip</code> 和 <code>sie</code> 寄存器的子集。</p>
-<h3 id="sedeleg-sideleg"><a class="header" href="#sedeleg-sideleg">sedeleg<code> </code>sideleg</a></h3>
+<h3 id="sedeleg-sideleg"><a class="header" href="#sedeleg-sideleg">sedeleg sideleg</a></h3>
 <p>为提升中断和异常的处理性能，可以实现独立的读写寄存器 <code>sedeleg</code> 和 <code>sideleg</code>，设置其中的位将特定的中断和异常交由用户态陷入处理程序处理。</p>
 <p>当一个陷入被委托给一个权限较低的模式 u 时，<code>ucause</code> 寄存器被写入陷阱的原因；<code>uepc</code> 寄存器被写入发生陷阱的指令的虚拟地址；<code>utval</code> 寄存器被写入一个特定的异常数据；<code>mstatus</code> 的 UPIE 字段被写入陷阱发生时 UIE 字段的值；<code>mstatus</code> 的 UIE 字段被清零。<code>mcause</code>/<code>scause</code> 和 <code>mepc</code>/<code>sepc</code> 寄存器以及 <code>mstatus</code> 的 MPP 和 MPIE 字段不被写入。</p>
 <p>一个实现不应硬性规定任何委托位为一，也就是说，任何可以被委托的陷阱都必须支持不被委托。一个实现方案是选择可委托的陷入的子集。支持的可委托位可通过向每个比特位置写 1，然后读回 <code>medeleg</code>/<code>sedeleg</code> 或 <code>mideleg</code>/<code>sideleg</code> 中的值，看看哪些位上有 1。</p>
