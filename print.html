@@ -518,7 +518,7 @@ uint32 get_l2_traffic(uint32 dsid);
 <p>这是一个干扰负载，在一个有 524288 个 32 位无符号整数的数组上随机进行读写，消耗内存带宽。申请内存的方式与 sort 程序相同，消耗约 2MB 内存空间和 8MB/s 的内存带宽。</p>
 <h2 id="monitor"><a class="header" href="#monitor">monitor</a></h2>
 <p>一个监测系统资源使用状况的程序，监测的资源包括 CPU 使用率、可用内存空间、各进程的运行时间、状态和内存占用、各标签的 L1 和 L2 之间的流量。每隔一秒输出一次，运行十秒后退出。其中 CPU 、内存和进程使用设备文件抽象接口，标签流量使用 <code>get_l2_traffic</code> 系统调用。运行界面如下：</p>
-<p><img src="monitor.png" alt="m" /></p>
+<p><img src="assets/monitor.png" alt="monitor UI" /></p>
 <h2 id="dsid_demo"><a class="header" href="#dsid_demo">dsid_demo</a></h2>
 <p>本程序中内置了若干组令牌桶和缓存掩码参数用于分配给指定的负载，并执行 <code>monitor</code> 程序监测系统资源的使用情况。</p>
 <p>使用方法为 <code>dsid_demo app1 param1 [app2 param2 [app3 param3]]</code> ，最多同时启动 3 个负载。例如， <code>dsid_demo sort 2 prime 1</code> 将为 <code>sort</code> 进程分配 2 号参数组，为 <code>prime</code> 进程分配 1 号参数组。由于可用的标签数量有限，同时为了方便监测起见，标签并不与参数组一一对应，而是为每个负载分配不同的标签，<code>appX</code> 的标签编号即为 X 。在上例中， <code>sort</code> 进程标签为 1 ，而 <code>prime</code> 进程标签为 2 。</p>
