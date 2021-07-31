@@ -98,7 +98,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> 简介</a></li><li class="chapter-item expanded "><a href="ch1_hardware.html" class="active"><strong aria-hidden="true">2.</strong> 硬件与模拟器</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch1_extN.html"><strong aria-hidden="true">2.1.</strong> N 扩展</a></li><li class="chapter-item expanded "><a href="ch1_use_of_user_mode_trap.html"><strong aria-hidden="true">2.2.</strong> 用户态中断的使用</a></li><li class="chapter-item expanded "><a href="ch1_external_interrupt_and_plic.html"><strong aria-hidden="true">2.3.</strong> 外部中断与 PLIC</a></li></ol></li><li class="chapter-item expanded "><a href="ch2_os.html"><strong aria-hidden="true">3.</strong> 操作系统</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch2_uCore.html"><strong aria-hidden="true">3.1.</strong> 标签化 uCore-SMP</a></li></ol></li><li class="chapter-item expanded "><a href="ch3_app.html"><strong aria-hidden="true">4.</strong> 应用程序</a></li><li class="chapter-item expanded "><a href="ch4_example.html"><strong aria-hidden="true">5.</strong> 成果示例</a></li><li class="chapter-item expanded "><a href="ch5_reference.html"><strong aria-hidden="true">6.</strong> 参考</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> 简介</a></li><li class="chapter-item expanded "><a href="ch1_hardware.html" class="active"><strong aria-hidden="true">2.</strong> 硬件与模拟器</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch1_n_ext_spec.html"><strong aria-hidden="true">2.1.</strong> N 扩展</a></li><li class="chapter-item expanded "><a href="ch1_use_of_user_mode_trap.html"><strong aria-hidden="true">2.2.</strong> 用户态中断的使用</a></li><li class="chapter-item expanded "><a href="ch1_external_interrupt_and_plic.html"><strong aria-hidden="true">2.3.</strong> 外部中断与 PLIC</a></li></ol></li><li class="chapter-item expanded "><a href="ch2_os.html"><strong aria-hidden="true">3.</strong> 操作系统</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch2_uCore.html"><strong aria-hidden="true">3.1.</strong> 标签化 uCore-SMP</a></li></ol></li><li class="chapter-item expanded "><a href="ch3_app.html"><strong aria-hidden="true">4.</strong> 应用程序</a></li><li class="chapter-item expanded "><a href="ch4_example.html"><strong aria-hidden="true">5.</strong> 成果示例</a></li><li class="chapter-item expanded "><a href="ch5_reference.html"><strong aria-hidden="true">6.</strong> 参考</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -171,13 +171,13 @@
                         <h1 id="硬件与模拟器"><a class="header" href="#硬件与模拟器">硬件与模拟器</a></h1>
 <blockquote>
 <p>本节介绍硬件与模拟器中实现的主要特性</p>
-<p>可以在 <a href="ch1_extN.html">N 扩展</a> 一节看到完整的 N 扩展及相关寄存器描述。在 <a href="ch1_use_of_user_mode_trap.html">用户态中断的使用</a> 一节中看到关于用户态中断使用的描述。</p>
+<p>可以在 <a href="ch1_n_ext_spec.html">N 扩展规范草案</a> 一节看到完整的 N 扩展及相关寄存器描述。在 <a href="ch1_use_of_user_mode_trap.html">用户态中断的使用</a> 一节中看到关于用户态中断使用的描述。</p>
 </blockquote>
 <h2 id="qemu-with-extension-n"><a class="header" href="#qemu-with-extension-n">QEMU with extension N</a></h2>
 <p>出于稳定性考虑，我们选择以 <a href="https://github.com/qemu/qemu/tree/stable-5.0">QEMU 的 5.0 稳定分支</a> 为基础，添加用户态中断所需的寄存器和相应的中断处理函数。</p>
 <ul>
 <li>添加寄存器 <code>ustatus</code> <code>uip</code> <code>uie</code> <code>sideleg</code> <code>sedeleg</code> <code>uepc</code> <code>utvec</code> <code>ucause</code> <code>utval</code> <code>uscratch</code></li>
-<li>添加用户态中断的触发部分：符合条件时使用上述处理器进入中断状态</li>
+<li>添加用户态中断的触发部分：符合条件时使上述处理器进入中断状态</li>
 <li>实现 <code>uret</code> 指令</li>
 </ul>
 <p>一个使用修改后的 QEMU 进行的用户态中断的简单测试结果：</p>
@@ -208,7 +208,7 @@
                         
 
                         
-                            <a rel="next" href="ch1_extN.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="ch1_n_ext_spec.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -226,7 +226,7 @@
                 
 
                 
-                    <a rel="next" href="ch1_extN.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="ch1_n_ext_spec.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 
