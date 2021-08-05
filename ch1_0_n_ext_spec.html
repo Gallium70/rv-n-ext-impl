@@ -1,0 +1,356 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>N 扩展规范 (草案） - Risc-V Extension N Implementation</title>
+        
+        
+
+
+        <!-- Custom HTML head -->
+        
+
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        
+        <link rel="icon" href="favicon.svg">
+        
+        
+        <link rel="shortcut icon" href="favicon.png">
+        
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        
+        <link rel="stylesheet" href="css/print.css" media="print">
+        
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        
+        <link rel="stylesheet" href="fonts/fonts.css">
+        
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> 简介</a></li><li class="chapter-item expanded "><a href="ch1_0_n_ext_spec.html" class="active"><strong aria-hidden="true">2.</strong> N 扩展规范 (草案）</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch1_1_user_trap_flow.html"><strong aria-hidden="true">2.1.</strong> 用户态中断的处理流程</a></li></ol></li><li class="chapter-item expanded "><a href="ch2_0_design.html"><strong aria-hidden="true">3.</strong> 设计</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch2_2_usage_of_user_mode_trap.html"><strong aria-hidden="true">3.1.</strong> 用户态中断的使用方案</a></li><li class="chapter-item expanded "><a href="ch2_3_external_interrupt_and_plic.html"><strong aria-hidden="true">3.2.</strong> 外部中断与 PLIC</a></li><li class="chapter-item expanded "><a href="ch2_4_user_trap_management.html"><strong aria-hidden="true">3.3.</strong> 用户态中断的管理</a></li><li class="chapter-item expanded "><a href="ch2_5_user_trap_pros_and_cons.html"><strong aria-hidden="true">3.4.</strong> 用户态中断的利与弊</a></li><li class="chapter-item expanded "><a href="ch2_6_label_system.html"><strong aria-hidden="true">3.5.</strong> 标签系统</a></li></ol></li><li class="chapter-item expanded "><a href="ch3_0_implementation.html"><strong aria-hidden="true">4.</strong> 实现</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch3_1_hardware_and_emulator.html"><strong aria-hidden="true">4.1.</strong> 硬件与模拟器</a></li><li class="chapter-item expanded "><a href="ch3_2_bootloader.html"><strong aria-hidden="true">4.2.</strong> 启动器与 SBI</a></li><li class="chapter-item expanded "><a href="ch3_3_kernel.html"><strong aria-hidden="true">4.3.</strong> 操作系统内核</a></li><li class="chapter-item expanded "><a href="ch3_4_user_app.html"><strong aria-hidden="true">4.4.</strong> 用户应用程序</a></li></ol></li><li class="chapter-item expanded "><a href="ch4_0_demo.html"><strong aria-hidden="true">5.</strong> 演示</a></li><li class="chapter-item expanded "><a href="ch5_0_reference.html"><strong aria-hidden="true">6.</strong> 参考</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        
+                    </div>
+
+                    <h1 class="menu-title">Risc-V Extension N Implementation</h1>
+
+                    <div class="right-buttons">
+                        
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        
+                        
+                        
+
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="n-扩展规范草案----omit-in-toc---"><a class="header" href="#n-扩展规范草案----omit-in-toc---">N 扩展规范草案 <!-- omit in toc --></a></h1>
+<blockquote>
+<p>目前此扩展适用于实现了 M/S/U 三种特权级和 CLINT+PLIC 的系统，暂不考虑与 H 扩展以及 AIA、CLIC、ACLINT 等中断机制的兼容或适配。</p>
+</blockquote>
+<ul>
+<li><a href="#n-%E6%89%A9%E5%B1%95%E7%9A%84-csr">N 扩展的 CSR</a>
+<ul>
+<li><a href="#%E7%94%A8%E6%88%B7%E7%8A%B6%E6%80%81%E5%AF%84%E5%AD%98%E5%99%A8-ustatus">用户状态寄存器 (<code>ustatus</code>)</a></li>
+<li><a href="#%E7%94%A8%E6%88%B7%E9%99%B7%E5%85%A5%E5%90%91%E9%87%8F%E5%9F%BA%E5%9D%80%E5%AF%84%E5%AD%98%E5%99%A8-utvec">用户陷入向量基址寄存器 (<code>utvec</code>)</a></li>
+<li><a href="#%E7%94%A8%E6%88%B7%E4%B8%AD%E6%96%AD%E5%AF%84%E5%AD%98%E5%99%A8-uip-%E4%B8%8E-uie">用户中断寄存器 (<code>uip</code> 与 <code>uie</code>)</a></li>
+<li><a href="#%E5%86%85%E6%A0%B8%E6%80%81%E9%99%B7%E5%85%A5%E5%A7%94%E6%89%98%E5%AF%84%E5%AD%98%E5%99%A8-sedeleg-%E4%B8%8E-sideleg">内核态陷入委托寄存器 (<code>sedeleg</code> 与 <code>sideleg</code>)</a></li>
+<li><a href="#uscratch">uscratch</a></li>
+<li><a href="#%E7%94%A8%E6%88%B7%E5%BC%82%E5%B8%B8%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8-uepc">用户异常程序计数器 (<code>uepc</code>)</a></li>
+<li><a href="#%E7%94%A8%E6%88%B7%E9%99%B7%E5%85%A5%E5%8E%9F%E5%9B%A0%E5%AF%84%E5%AD%98%E5%99%A8-ucause">用户陷入原因寄存器 (<code>ucause</code>)</a></li>
+<li><a href="#%E7%94%A8%E6%88%B7%E9%99%B7%E5%85%A5%E5%80%BC%E5%AF%84%E5%AD%98%E5%99%A8-utval">用户陷入值寄存器 (<code>utval</code>)</a></li>
+</ul>
+</li>
+<li><a href="#n-%E6%89%A9%E5%B1%95%E7%9A%84%E6%8C%87%E4%BB%A4">N 扩展的指令</a>
+<ul>
+<li><a href="#uret">URET</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="n-扩展的-csr"><a class="header" href="#n-扩展的-csr">N 扩展的 CSR</a></h2>
+<h3 id="用户状态寄存器-ustatus"><a class="header" href="#用户状态寄存器-ustatus">用户状态寄存器 (<code>ustatus</code>)</a></h3>
+<pre><code>UXLEN-1 5   4    3  1    0
+┌────────┬──────┬──────┬─────┐
+│  WPRI  │ UPIE │ WPRI │ UIE │
+└────────┴──────┴──────┴─────┘
+  UXLEN-5   1       3     1
+</code></pre>
+<p><code>ustatus</code> 是一个 UXLEN 位长的可读写寄存器，记录和控制硬件线程当前的工作状态。</p>
+<p>用户态中断使能位 UIE 为零时，用户态中断被禁用。为了向用户态陷入处理程序提供原子性，UIE 中的值在用户态中断发生时被复制到 UPIE ，且 UIE 被置为零。</p>
+<p>UIE 和 UPIE 是 <code>mstatus</code> 和 <code>sstatus</code> 中对应位的镜像。</p>
+<blockquote>
+<p>进入用户态中断处理函数之前的特权级只可能是用户态，所以不需要 UPP 位。</p>
+</blockquote>
+<p>指令 URET 用于从用户态陷入状态中返回。URET 将 UPIE 复制回 UIE，然后将 UPIE 置位，最后将 <code>uepc</code> 拷贝至 <code>pc</code>。</p>
+<blockquote>
+<p>在 UPIE/UIE 栈弹出后置位 UPIE 是为了启用中断，以及帮助发现代码中的错误。</p>
+</blockquote>
+<h3 id="用户陷入向量基址寄存器-utvec"><a class="header" href="#用户陷入向量基址寄存器-utvec">用户陷入向量基址寄存器 (<code>utvec</code>)</a></h3>
+<pre><code>| BASE[UXLEN-1 : 2] | MODE |
+</code></pre>
+<p><code>utvec</code> 是 UXLEN 位长的可读写寄存器，存储陷入向量的设置，包括向量基址 (BASE) 和向量模式。</p>
+<p><code>utvec</code> 中的 BASE 为 <strong>WARL</strong> 字段，可以存储任何有效的虚拟地址或物理地址，地址需要对齐到 4 字节。其他的向量模式可能有额外的对齐约束条件。</p>
+<table><thead><tr><th>value</th><th>name</th><th>description</th></tr></thead><tbody>
+<tr><td>0</td><td>direct</td><td>base</td></tr>
+<tr><td>1</td><td>vectored</td><td>base + 4 * cause</td></tr>
+<tr><td></td><td></td><td>reserved</td></tr>
+</tbody></table>
+<h3 id="用户中断寄存器-uip-与-uie"><a class="header" href="#用户中断寄存器-uip-与-uie">用户中断寄存器 (<code>uip</code> 与 <code>uie</code>)</a></h3>
+<p><code>uip</code> 和 <code>uie</code> 均为 UXLEN 位的可读写寄存器，其中 <code>uip</code> 存储等待处理的中断信息， <code>uie</code> 存储相应的中断使能位。</p>
+<pre><code>UXLEN-1  9    8   7    5    4   3    1    0
+| WPRI    | UEIP | WPRI | UTIP | WPRI | USIP |
+
+| WPRI    | UEIE | WPRI | UTIE | WPRI | USIE |
+  UXLEN-9     1      3      1      3      1
+</code></pre>
+<p>定义三种中断：软件中断、时钟中断和外部中断。用户态软件中断通过置位当前硬件线程的 <code>uip</code> 的软件中断等待位 (USIP) 来触发。清零该位可以清除待处理的软件中断。当 <code>uie</code> 中的 USIE 为零时，用户态软件中断被禁用。</p>
+<p>ABI 应当提供一种向其他硬件线程发送跨核中断的机制，这最终将置位接收方硬件线程 <code>uip</code> 寄存器的 USIP 位。</p>
+<p>除了 USIP， <code>uip</code> 中的其他位在用户态是只读的。</p>
+<p>如果 <code>uip</code> 寄存器中的 UTIP 位被置位，将产生一个待处理的用户态时钟中断。当 <code>uie</code> 寄存器中的 UTIE 位被置零时，用户态时钟中断被禁用。ABI 应该提供清除待处理的时钟中断的机制。</p>
+<p>如果 <code>uip</code> 寄存器中的 UEIP 位被置位，将产生一个待处理的用户态外部中断。当 <code>uie</code> 寄存器中的 UEIE 位被置位时，用户态外部中断被禁用。ABI 应该提供屏蔽、解除屏蔽和查询外部中断原因的机制。</p>
+<p><code>uip</code> 和 <code>uie</code> 寄存器是 <code>mip</code> 和 <code>mie</code> 寄存器的子集。对 <code>uip</code>/<code>uie</code> 任何字段的读取或写入操作，都会等效为对 <code>mip</code>/<code>mie</code> 的相应字段的读取或写入。如果系统实现了 S 模式，<code>uip</code> 和 <code>uie</code> 寄存器也是 <code>sip</code> 和 <code>sie</code> 寄存器的子集。</p>
+<h3 id="内核态陷入委托寄存器-sedeleg-与-sideleg"><a class="header" href="#内核态陷入委托寄存器-sedeleg-与-sideleg">内核态陷入委托寄存器 (<code>sedeleg</code> 与 <code>sideleg</code>)</a></h3>
+<p>为提升中断和异常的处理性能，可以实现独立的可读写寄存器 <code>sedeleg</code> 和 <code>sideleg</code>，设置其中的位将特定的中断和异常交由用户态陷入处理程序处理。这两个寄存器与相应的机器态陷入委托寄存器 (<code>medeleg</code> 和 <code>mideleg</code>) 布局相同。只有已经被委托给 S 态的陷入对应的位才是可写的，其余位由硬件保持为 0 ，即只有委托给 S 态的陷入才可能被委托给 U 态。</p>
+<p>当一个陷入被委托给一个权限较低的模式 u 时，<code>ucause</code> 寄存器被写入陷阱的原因；<code>uepc</code> 寄存器被写入发生陷阱的指令的虚拟地址；<code>utval</code> 寄存器被写入一个特定的异常数据；<code>mstatus</code> 的 UPIE 字段被写入陷阱发生时 UIE 字段的值；<code>mstatus</code> 的 UIE 字段被清零。<code>mcause</code>/<code>scause</code> 和 <code>mepc</code>/<code>sepc</code> 寄存器以及 <code>mstatus</code> 的 MPP 和 MPIE 字段不被写入。</p>
+<p>一个实现不应硬性规定任何委托位为一，也就是说，任何可以被委托的陷阱都必须支持不被委托。一个实现方案是选择可委托的陷入的子集。支持的可委托位可通过向每个比特位置写 1，然后读回 <code>medeleg</code>/<code>sedeleg</code> 或 <code>mideleg</code>/<code>sideleg</code> 中的值，看看哪些位上有 1。</p>
+<blockquote>
+<p>目前，不支持触发低权限级的陷入</p>
+</blockquote>
+<p>不会在用户态发生的应硬件恒零，如 ECall from S/H/M-mode</p>
+<h3 id="uscratch"><a class="header" href="#uscratch">uscratch</a></h3>
+<p><code>uscratch</code> 寄存器是一个 UXLEN 位读/写寄存器。</p>
+<h3 id="用户异常程序计数器-uepc"><a class="header" href="#用户异常程序计数器-uepc">用户异常程序计数器 (<code>uepc</code>)</a></h3>
+<p><code>uepc</code> 是 UXLEN 位的可读写寄存器。最低位（<code>uepc[0]</code>）恒为零。次低位 <code>uepc[1]</code> 视实现的对齐需求而定。</p>
+<p><code>uepc</code> 是 WARL 寄存器，必须能存储所有有效的虚拟地址，但不需要能够存储所有可能的无效地址。实现可以先将一些非法地址转为其他非法地址再写入 <code>uepc</code>。</p>
+<p>当陷入在用户态处理时，被中断或触发异常的指令的虚拟地址被写入 <code>uepc</code>，除此之外 <code>uepc</code> 永远不会被硬件实现写入，但可能被软件显式写入。</p>
+<h3 id="用户陷入原因寄存器-ucause"><a class="header" href="#用户陷入原因寄存器-ucause">用户陷入原因寄存器 (<code>ucause</code>)</a></h3>
+<pre><code>| Interrupt | Exception Code (WLRL) |
+</code></pre>
+<p><code>ucause</code> 是 UXLEN 位长读写寄存器。当陷入在用户态处理时，触发陷入的事件编号被写入 <code>ucause</code>，除此之外 <code>ucause</code> 永远不会被硬件实现写入，但可能被软件显式写入。</p>
+<table><thead><tr><th>Interrupt</th><th>Exception Code</th><th>Description</th></tr></thead><tbody>
+<tr><td>1</td><td>0</td><td>用户态软件中断</td></tr>
+<tr><td>1</td><td>1-3</td><td><em>预留</em></td></tr>
+<tr><td>1</td><td>4</td><td>用户态时钟中断</td></tr>
+<tr><td>1</td><td>5-7</td><td><em>预留</em></td></tr>
+<tr><td>1</td><td>8</td><td>用户态外部中断</td></tr>
+<tr><td>1</td><td>9-15</td><td><em>预留</em></td></tr>
+<tr><td>1</td><td>≥16</td><td><em>由平台使用</em></td></tr>
+<tr><td>0</td><td>0</td><td>指令地址未对齐</td></tr>
+<tr><td>0</td><td>1</td><td>指令访问错误</td></tr>
+<tr><td>0</td><td>2</td><td>非法指令</td></tr>
+<tr><td>0</td><td>3</td><td>断点</td></tr>
+<tr><td>0</td><td>4</td><td>加载地址未对齐</td></tr>
+<tr><td>0</td><td>5</td><td>加载访问错误</td></tr>
+<tr><td>0</td><td>6</td><td>存储/原子内存操作地址未对齐</td></tr>
+<tr><td>0</td><td>7</td><td>存储/原子内存操作访问错误</td></tr>
+<tr><td>0</td><td>8</td><td>用户态环境调用</td></tr>
+<tr><td>0</td><td>9-11</td><td><em>预留</em></td></tr>
+<tr><td>0</td><td>12</td><td>指令页错误</td></tr>
+<tr><td>0</td><td>13</td><td>加载页错误</td></tr>
+<tr><td>0</td><td>14</td><td><em>预留</em></td></tr>
+<tr><td>0</td><td>15</td><td>存储/原子内存操作页错误</td></tr>
+<tr><td>0</td><td>16-23</td><td><em>预留</em></td></tr>
+<tr><td>0</td><td>24-31</td><td><em>自定义用途</em></td></tr>
+<tr><td>0</td><td>32-47</td><td><em>预留</em></td></tr>
+<tr><td>0</td><td>48-63</td><td><em>自定义用途</em></td></tr>
+<tr><td>0</td><td>≥64</td><td><em>预留</em></td></tr>
+</tbody></table>
+<h3 id="用户陷入值寄存器-utval"><a class="header" href="#用户陷入值寄存器-utval">用户陷入值寄存器 (<code>utval</code>)</a></h3>
+<p><code>utval</code> 是 UXLEN 位的可读写寄存器。当陷入在用户态处理时，和特定异常相关的信息将被写入 <code>utval</code> 以帮助软件处理陷入，除此之外 <code>utval</code> 永远不会被硬件实现写入，但可能被软件显式写入。硬件平台指定哪些异常必须将信息写入 <code>utval</code> ，以及哪些异常会无条件写入 0 。</p>
+<p>当硬件断点被触发，或是一个指令/加载/存储地址未对齐/访问错误/页错误异常产生时，导致错误的虚拟地址被写入 <code>utval</code> 。当非法指令异常产生时，相应指令的前 XLEN 或 ILEN 位可能被写入 <code>utval</code> 。对于其他异常，<code>utval</code> 被置为 0 ，但未来的标准可能重新定义 <code>utval</code> 的设置。</p>
+<h2 id="n-扩展的指令"><a class="header" href="#n-扩展的指令">N 扩展的指令</a></h2>
+<h3 id="uret"><a class="header" href="#uret">URET</a></h3>
+<p><code>uret</code> 将 <code>pc</code> 设置为 <code>uepc</code> ，将 <code>ustatus.UIE</code> 设置为 <code>ustatus.UPIE</code> ，从而恢复中断前的状态。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="intro.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="ch1_1_user_trap_flow.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a rel="prev" href="intro.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a rel="next" href="ch1_1_user_trap_flow.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>
