@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>应用程序 - Risc-V Extension N Implementation</title>
+        <title>用户态中断的处理流程 - Risc-V Extension N Implementation</title>
         
         
 
@@ -98,7 +98,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> 简介</a></li><li class="chapter-item expanded "><a href="ch1_hardware.html"><strong aria-hidden="true">2.</strong> 硬件与模拟器</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch1_n_ext_spec.html"><strong aria-hidden="true">2.1.</strong> N 扩展</a></li><li class="chapter-item expanded "><a href="ch1_use_of_user_mode_trap.html"><strong aria-hidden="true">2.2.</strong> 用户态中断的使用</a></li><li class="chapter-item expanded "><a href="ch1_external_interrupt_and_plic.html"><strong aria-hidden="true">2.3.</strong> 外部中断与 PLIC</a></li></ol></li><li class="chapter-item expanded "><a href="ch2_os.html"><strong aria-hidden="true">3.</strong> 操作系统</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch2_uCore.html"><strong aria-hidden="true">3.1.</strong> 标签化 uCore-SMP</a></li></ol></li><li class="chapter-item expanded "><a href="ch3_app.html" class="active"><strong aria-hidden="true">4.</strong> 应用程序</a></li><li class="chapter-item expanded "><a href="ch4_example.html"><strong aria-hidden="true">5.</strong> 成果示例</a></li><li class="chapter-item expanded "><a href="ch5_reference.html"><strong aria-hidden="true">6.</strong> 参考</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> 简介</a></li><li class="chapter-item expanded "><a href="ch1_0_ext_spec.html"><strong aria-hidden="true">2.</strong> N 扩展规范 (草案)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch1_1_user_trap_flow.html" class="active"><strong aria-hidden="true">2.1.</strong> 用户态中断的处理流程</a></li></ol></li><li class="chapter-item expanded "><a href="ch2_0_design.html"><strong aria-hidden="true">3.</strong> 设计</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch2_1_trap_comparison.html"><strong aria-hidden="true">3.1.</strong> 与其他特权级中断的比较</a></li><li class="chapter-item expanded "><a href="ch2_2_usage_of_user_mode_trap.html"><strong aria-hidden="true">3.2.</strong> 用户态中断的使用方案</a></li><li class="chapter-item expanded "><a href="ch2_3_external_interrupt_and_plic.html"><strong aria-hidden="true">3.3.</strong> 外部中断与 PLIC</a></li><li class="chapter-item expanded "><a href="ch2_4_user_trap_management.html"><strong aria-hidden="true">3.4.</strong> 用户态中断的管理</a></li><li class="chapter-item expanded "><a href="ch2_5_user_trap_pros_and_cons.html"><strong aria-hidden="true">3.5.</strong> 用户态中断的利与弊</a></li><li class="chapter-item expanded "><a href="ch2_6_label_system.html"><strong aria-hidden="true">3.6.</strong> 标签系统</a></li></ol></li><li class="chapter-item expanded "><a href="ch3_0_implementation.html"><strong aria-hidden="true">4.</strong> 实现</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch3_1_hardware_and_emulator.html"><strong aria-hidden="true">4.1.</strong> 硬件与模拟器</a></li><li class="chapter-item expanded "><a href="ch3_2_bootloader.html"><strong aria-hidden="true">4.2.</strong> 启动器与 SBI</a></li><li class="chapter-item expanded "><a href="ch3_3_kernel.html"><strong aria-hidden="true">4.3.</strong> 操作系统内核</a></li><li class="chapter-item expanded "><a href="ch3_4_user_app.html"><strong aria-hidden="true">4.4.</strong> 用户应用程序</a></li></ol></li><li class="chapter-item expanded "><a href="ch4_0_demo.html"><strong aria-hidden="true">5.</strong> 演示</a></li><li class="chapter-item expanded "><a href="ch5_0_reference.html"><strong aria-hidden="true">6.</strong> 参考</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -168,61 +168,60 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="应用程序"><a class="header" href="#应用程序">应用程序</a></h1>
-<p>为了使用标签系统，测量和展示标签系统的控制效果，设计了以下几个用户态应用程序：sort、jammer、prime、monitor、dsid_demo。</p>
-<h2 id="sort"><a class="header" href="#sort">sort</a></h2>
-<p>对 501202 个 32 位无符号整数，使用基数排序法进行排序，基为 65536 ，数据使用随机数生成器和固定的种子生成，并使用 sharedmem 作为动态申请内存的方式。每个进程会将自己的 pid 加入共享内存名字中，以确保多个负载不会申请到同一块共享内存。程序将自身的运行时间作为返回值，单位是毫秒。</p>
-<p>这是一个内存密集型负载，消耗约 4.5MB 内存空间和 8MB/s 的内存带宽。</p>
-<h2 id="prime"><a class="header" href="#prime">prime</a></h2>
-<p>计算 2 到 52021 之间质数的个数。使用朴素算法，对于每个数 x ，枚举 2 到 x/2 之间的数，判断是否能够整除 x，若能，则 x 不是质数。这是一个计算密集型负载，可以用于验证多核正常运行，且运行时间几乎不受内存带宽限制的影响。</p>
-<h2 id="jammer"><a class="header" href="#jammer">jammer</a></h2>
-<p>这是一个干扰负载，在一个有 524288 个 32 位无符号整数的数组上随机进行读写，消耗内存带宽。申请内存的方式与 sort 程序相同，消耗约 2MB 内存空间和 8MB/s 的内存带宽。</p>
-<h2 id="monitor"><a class="header" href="#monitor">monitor</a></h2>
-<p>一个监测系统资源使用状况的程序，监测的资源包括 CPU 使用率、可用内存空间、各进程的运行时间、状态和内存占用、各标签的 L1 和 L2 之间的流量。每隔一秒输出一次，运行十秒后退出。其中 CPU 、内存和进程使用设备文件抽象接口，标签流量使用 <code>get_l2_traffic</code> 系统调用。运行界面如下：</p>
-<p><img src="assets/monitor.png" alt="monitor UI" /></p>
-<h2 id="dsid_demo"><a class="header" href="#dsid_demo">dsid_demo</a></h2>
-<p>本程序中内置了若干组令牌桶和缓存掩码参数用于分配给指定的负载，并执行 <code>monitor</code> 程序监测系统资源的使用情况。</p>
-<p>使用方法为 <code>dsid_demo app1 param1 [app2 param2 [app3 param3]]</code> ，最多同时启动 3 个负载。例如， <code>dsid_demo sort 2 prime 1</code> 将为 <code>sort</code> 进程分配 2 号参数组，为 <code>prime</code> 进程分配 1 号参数组。由于可用的标签数量有限，同时为了方便监测起见，标签并不与参数组一一对应，而是为每个负载分配不同的标签，<code>appX</code> 的标签编号即为 X 。在上例中， <code>sort</code> 进程标签为 1 ，而 <code>prime</code> 进程标签为 2 。</p>
-<p>各组参数具体的设计，是为了实现以下四种测试场景：</p>
+                        <h1 id="用户态中断与异常的处理流程"><a class="header" href="#用户态中断与异常的处理流程">用户态中断与异常的处理流程</a></h1>
+<p><img src="assets/user_trap_flow.drawio.svg" alt="用户态中断与异常的处理流程" /></p>
+<h2 id="中断的产生"><a class="header" href="#中断的产生">中断的产生</a></h2>
+<p>与 M 态和 S 态类似，中断分为软件中断 (Software Interrupt)、时钟中断 (Timer Interrupt) 和外部中断 (External Interrupt)。</p>
+<blockquote>
+<p>方便起见，三类中断会简称为 xSI、xTI、xEI，其中 x 为特权级。</p>
+</blockquote>
+<p>硬件或软件将 <code>uip.UXIP</code> (X 表示中断种类) 置为 1 ，硬件检测发现 <code>uip</code> 非零，进入中断的判断流程。</p>
+<p>首先检查该中断是否被委托给用户态处理，即 <code>sideleg</code> 寄存器中对应的位是否为 1；如果为真，检查用户态全局中断使能是否为真，即 <code>ustatus.UIE</code> 是否为 1 ；若仍为真，再检查该中断是否被使能，即 <code>uie.UXIE</code> 是否为 1 ；如果还为真，则触发中断处理的流程。</p>
+<blockquote>
+<p><strong>注意</strong></p>
+<p>上述寄存器中，<code>uie</code> <code>uip</code> 为 <code>mie</code> <code>mip</code> 的子集，即读写会同时作用于所有的 <code>xip</code> <code>xie</code> 或它们本就是同一寄存器。而 <code>ustatus</code> 至少 <code>UIE</code> 和 <code>UPIE</code> 与 <code>mstatus</code> 中的相同位相同。</p>
+<p>虽然上述中断产生的流程中有判断次序，实际实现中一般使用组合逻辑，将寄存器值进行位与来判断，可以认为是同时判断的。</p>
+</blockquote>
+<h2 id="异常的产生"><a class="header" href="#异常的产生">异常的产生</a></h2>
+<p>当异常发生时，硬件只检查 <code>sedeleg</code> 寄存器中对应的位是否为 1，若为真则触发异常的处理流程。</p>
+<p>在 RISC-V 中，中断和异常的处理流程是统一的，下面出于描述简单考虑，多数情况下围绕中断进行描述。</p>
+<h2 id="中断的处理"><a class="header" href="#中断的处理">中断的处理</a></h2>
+<p>在上述的产生流程后，处理器开始进行一些预处理：</p>
 <ul>
-<li>不调控</li>
-<li>内存带宽 5M：5M，缓存 768K：768K</li>
-<li>内存带宽 7M：2M，缓存 1280K：256K</li>
-<li>内存带宽 8M：1M，缓存 1280K：256K</li>
+<li>设置 <code>ustatus.UPIE</code> 为 <code>ustatus.UIE</code> 的值，并置 <code>ustatus.UIE</code> 为 0</li>
+<li>根据中断类型设置 <code>ucause</code></li>
+<li>设置 <code>uepc</code> 为发生中断或异常时的 <code>pc</code></li>
+<li>(可选) 设置 <code>utval</code></li>
+<li>根据 <code>utvec</code> 的最低二位和高位的基地址，跳转到设置好的中断处理程序</li>
 </ul>
-<p>内置参数组如下（其中 size 参数值均为 0x800）：</p>
-<table><thead><tr><th align="center">编号</th><th align="center">freq</th><th align="center">inc</th><th align="center">cache mask</th><th>备注</th></tr></thead><tbody>
-<tr><td align="center">0</td><td align="center">10000</td><td align="center">40</td><td align="center">0x000F</td><td>用于内核进程和监测程序，内存带宽约 3MB/s ，<br/>缓存 512K，与其他参数组隔离</td></tr>
-<tr><td align="center">1</td><td align="center">100</td><td align="center">100</td><td align="center">0xFFF0</td><td>内存带宽不限，缓存 1536K</td></tr>
-<tr><td align="center">2</td><td align="center">7800</td><td align="center">80</td><td align="center">0xFFC0</td><td>内存带宽约 8MB/s ，缓存 1280K</td></tr>
-<tr><td align="center">3</td><td align="center">7800</td><td align="center">10</td><td align="center">0x0030</td><td>内存带宽约 1MB/s ，缓存 256K</td></tr>
-<tr><td align="center">4</td><td align="center">7800</td><td align="center">80</td><td align="center">0xFFF0</td><td>内存带宽约 8MB/s ，缓存 1536K</td></tr>
-<tr><td align="center">5</td><td align="center">7800</td><td align="center">10</td><td align="center">0xFFF0</td><td>内存带宽约 1MB/s ，缓存 1536K</td></tr>
-<tr><td align="center">6</td><td align="center">100</td><td align="center">100</td><td align="center">0xFFC0</td><td>内存带宽不限，缓存 1280K</td></tr>
-<tr><td align="center">7</td><td align="center">100</td><td align="center">100</td><td align="center">0x0030</td><td>内存带宽不限，缓存 256K</td></tr>
-<tr><td align="center">8</td><td align="center">9300</td><td align="center">60</td><td align="center">0x03F0</td><td>内存带宽约 5MB/s ，缓存 768K</td></tr>
-<tr><td align="center">9</td><td align="center">9300</td><td align="center">60</td><td align="center">0xFC00</td><td>内存带宽约 5MB/s ，缓存 768K</td></tr>
-<tr><td align="center">10</td><td align="center">9300</td><td align="center">60</td><td align="center">0xFFF0</td><td>内存带宽约 5MB/s ，缓存 1536K</td></tr>
-<tr><td align="center">11</td><td align="center">100</td><td align="center">100</td><td align="center">0x03F0</td><td>内存带宽不限，缓存 768K</td></tr>
-<tr><td align="center">12</td><td align="center">100</td><td align="center">100</td><td align="center">0xFC00</td><td>内存带宽不限，缓存 768K</td></tr>
-<tr><td align="center">13</td><td align="center">7800</td><td align="center">70</td><td align="center">0xFFC0</td><td>内存带宽约 7MB/s ，缓存 1280K</td></tr>
-<tr><td align="center">14</td><td align="center">7800</td><td align="center">20</td><td align="center">0x0030</td><td>内存带宽约 2MB/s ，缓存 256K</td></tr>
-<tr><td align="center">15</td><td align="center">7800</td><td align="center">70</td><td align="center">0xFFF0</td><td>内存带宽约 7MB/s ，缓存 1536K</td></tr>
-<tr><td align="center">16</td><td align="center">7800</td><td align="center">20</td><td align="center">0xFFF0</td><td>内存带宽约 2MB/s ，缓存 1536K</td></tr>
-</tbody></table>
+<p>中断处理程序需要完成以下工作：</p>
+<ul>
+<li>保存现场</li>
+<li>如果 <code>utvec</code> 为 direct 模式，根据 <code>ucause</code> 执行相应的处理程序</li>
+<li>如果 <code>utvec</code> 为 vector 模式，执行处理程序</li>
+<li>恢复现场</li>
+</ul>
+<p>中断处理程序通常需要保存和恢复的现场有：</p>
+<ul>
+<li>x1-x31 通用寄存器 (如果确定中断处理程序中不会使用到某些寄存器，可以省去保存和恢复)</li>
+<li><code>ustatus</code> (可能需要通过修改 <code>ustatus</code> 来改变 CPU 状态)</li>
+<li><code>uepc</code> (可能需要通过修改进一步触发 S 态的中断/异常)</li>
+<li><strong>我们尚未注意到的但需要保存和恢复的寄存器</strong></li>
+</ul>
+<p><img src="assets/trap.drawio.svg" alt="中断与异常的硬件处理流程" /></p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="ch2_uCore.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="ch1_0_ext_spec.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
                         
-                            <a rel="next" href="ch4_example.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="ch2_0_design.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -234,13 +233,13 @@
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a rel="prev" href="ch2_uCore.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="ch1_0_ext_spec.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a rel="next" href="ch4_example.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="ch2_0_design.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 

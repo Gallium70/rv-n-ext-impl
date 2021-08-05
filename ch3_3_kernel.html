@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>标签化 uCore-SMP - Risc-V Extension N Implementation</title>
+        <title>操作系统内核 - Risc-V Extension N Implementation</title>
         
         
 
@@ -98,7 +98,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> 简介</a></li><li class="chapter-item expanded "><a href="ch1_hardware.html"><strong aria-hidden="true">2.</strong> 硬件与模拟器</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch1_n_ext_spec.html"><strong aria-hidden="true">2.1.</strong> N 扩展</a></li><li class="chapter-item expanded "><a href="ch1_use_of_user_mode_trap.html"><strong aria-hidden="true">2.2.</strong> 用户态中断的使用</a></li><li class="chapter-item expanded "><a href="ch1_external_interrupt_and_plic.html"><strong aria-hidden="true">2.3.</strong> 外部中断与 PLIC</a></li></ol></li><li class="chapter-item expanded "><a href="ch2_os.html"><strong aria-hidden="true">3.</strong> 操作系统</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch2_uCore.html" class="active"><strong aria-hidden="true">3.1.</strong> 标签化 uCore-SMP</a></li></ol></li><li class="chapter-item expanded "><a href="ch3_app.html"><strong aria-hidden="true">4.</strong> 应用程序</a></li><li class="chapter-item expanded "><a href="ch4_example.html"><strong aria-hidden="true">5.</strong> 成果示例</a></li><li class="chapter-item expanded "><a href="ch5_reference.html"><strong aria-hidden="true">6.</strong> 参考</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> 简介</a></li><li class="chapter-item expanded "><a href="ch1_0_ext_spec.html"><strong aria-hidden="true">2.</strong> N 扩展规范 (草案)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch1_1_user_trap_flow.html"><strong aria-hidden="true">2.1.</strong> 用户态中断的处理流程</a></li></ol></li><li class="chapter-item expanded "><a href="ch2_0_design.html"><strong aria-hidden="true">3.</strong> 设计</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch2_1_trap_comparison.html"><strong aria-hidden="true">3.1.</strong> 与其他特权级中断的比较</a></li><li class="chapter-item expanded "><a href="ch2_2_usage_of_user_mode_trap.html"><strong aria-hidden="true">3.2.</strong> 用户态中断的使用方案</a></li><li class="chapter-item expanded "><a href="ch2_3_external_interrupt_and_plic.html"><strong aria-hidden="true">3.3.</strong> 外部中断与 PLIC</a></li><li class="chapter-item expanded "><a href="ch2_4_user_trap_management.html"><strong aria-hidden="true">3.4.</strong> 用户态中断的管理</a></li><li class="chapter-item expanded "><a href="ch2_5_user_trap_pros_and_cons.html"><strong aria-hidden="true">3.5.</strong> 用户态中断的利与弊</a></li><li class="chapter-item expanded "><a href="ch2_6_label_system.html"><strong aria-hidden="true">3.6.</strong> 标签系统</a></li></ol></li><li class="chapter-item expanded "><a href="ch3_0_implementation.html"><strong aria-hidden="true">4.</strong> 实现</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch3_1_hardware_and_emulator.html"><strong aria-hidden="true">4.1.</strong> 硬件与模拟器</a></li><li class="chapter-item expanded "><a href="ch3_2_bootloader.html"><strong aria-hidden="true">4.2.</strong> 启动器与 SBI</a></li><li class="chapter-item expanded "><a href="ch3_3_kernel.html" class="active"><strong aria-hidden="true">4.3.</strong> 操作系统内核</a></li><li class="chapter-item expanded "><a href="ch3_4_user_app.html"><strong aria-hidden="true">4.4.</strong> 用户应用程序</a></li></ol></li><li class="chapter-item expanded "><a href="ch4_0_demo.html"><strong aria-hidden="true">5.</strong> 演示</a></li><li class="chapter-item expanded "><a href="ch5_0_reference.html"><strong aria-hidden="true">6.</strong> 参考</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -168,7 +168,9 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="操作系统标签化-ucore-smp"><a class="header" href="#操作系统标签化-ucore-smp">操作系统：标签化 uCore-SMP</a></h1>
+                        <h1 id="操作系统"><a class="header" href="#操作系统">操作系统</a></h1>
+<p>我们选择基于 <a href="https://github.com/TianhuaTao/uCore-SMP/tree/label-riscv">TianhuaTao/uCore-SMP</a> 和 rCore，加入用户态中断和标签的支持，完成软硬件的协同。</p>
+<h1 id="操作系统标签化-ucore-smp"><a class="header" href="#操作系统标签化-ucore-smp">操作系统：标签化 uCore-SMP</a></h1>
 <p>uCore-SMP 在设计时目标平台为 QEMU ，将其移植到 FPGA 平台主要需要解决如下问题：内存布局、时钟周期、页表项属性和硬盘外设。移植完成后，还需添加对标签系统的支持。代码仓库位于 https://github.com/TianhuaTao/uCore-SMP/tree/label-riscv 。</p>
 <h2 id="内存布局"><a class="header" href="#内存布局">内存布局</a></h2>
 <p>QEMU 中内存的起始地址为 0x80000000 ，而 FPGA 平台起始地址为 0x100000000 ，相应的内核启动地址也要调整到 0x100200000 ，这两个值需要在 <code>memory_layout.h</code> 和 <code>kernelld.py</code> 中进行修改。QEMU 中配置总内存空间为 128MB，而尽管 FPGA 平台有 2GB DRAM，由于内存带宽有限，uCore-SMP 在启动时又会将所有内存地址遍历并初始化。为了减少操作系统的启动等待时间，综合考虑内核和用户程序所需的内存空间，最终将可分配的内存限制在 32MB 。</p>
@@ -213,13 +215,13 @@ uint32 get_l2_traffic(uint32 dsid);
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="ch2_os.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="ch3_2_bootloader.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
                         
-                            <a rel="next" href="ch3_app.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="ch3_4_user_app.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -231,13 +233,13 @@ uint32 get_l2_traffic(uint32 dsid);
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a rel="prev" href="ch2_os.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="ch3_2_bootloader.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a rel="next" href="ch3_app.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="ch3_4_user_app.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 

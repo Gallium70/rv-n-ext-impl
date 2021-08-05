@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>参考 - Risc-V Extension N Implementation</title>
+        <title>设计 - Risc-V Extension N Implementation</title>
         
         
 
@@ -98,7 +98,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> 简介</a></li><li class="chapter-item expanded "><a href="ch1_hardware.html"><strong aria-hidden="true">2.</strong> 硬件与模拟器</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch1_n_ext_spec.html"><strong aria-hidden="true">2.1.</strong> N 扩展</a></li><li class="chapter-item expanded "><a href="ch1_use_of_user_mode_trap.html"><strong aria-hidden="true">2.2.</strong> 用户态中断的使用</a></li><li class="chapter-item expanded "><a href="ch1_external_interrupt_and_plic.html"><strong aria-hidden="true">2.3.</strong> 外部中断与 PLIC</a></li></ol></li><li class="chapter-item expanded "><a href="ch2_os.html"><strong aria-hidden="true">3.</strong> 操作系统</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch2_uCore.html"><strong aria-hidden="true">3.1.</strong> 标签化 uCore-SMP</a></li></ol></li><li class="chapter-item expanded "><a href="ch3_app.html"><strong aria-hidden="true">4.</strong> 应用程序</a></li><li class="chapter-item expanded "><a href="ch4_example.html"><strong aria-hidden="true">5.</strong> 成果示例</a></li><li class="chapter-item expanded "><a href="ch5_reference.html" class="active"><strong aria-hidden="true">6.</strong> 参考</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> 简介</a></li><li class="chapter-item expanded "><a href="ch1_0_ext_spec.html"><strong aria-hidden="true">2.</strong> N 扩展规范 (草案)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch1_1_user_trap_flow.html"><strong aria-hidden="true">2.1.</strong> 用户态中断的处理流程</a></li></ol></li><li class="chapter-item expanded "><a href="ch2_0_design.html" class="active"><strong aria-hidden="true">3.</strong> 设计</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch2_1_trap_comparison.html"><strong aria-hidden="true">3.1.</strong> 与其他特权级中断的比较</a></li><li class="chapter-item expanded "><a href="ch2_2_usage_of_user_mode_trap.html"><strong aria-hidden="true">3.2.</strong> 用户态中断的使用方案</a></li><li class="chapter-item expanded "><a href="ch2_3_external_interrupt_and_plic.html"><strong aria-hidden="true">3.3.</strong> 外部中断与 PLIC</a></li><li class="chapter-item expanded "><a href="ch2_4_user_trap_management.html"><strong aria-hidden="true">3.4.</strong> 用户态中断的管理</a></li><li class="chapter-item expanded "><a href="ch2_5_user_trap_pros_and_cons.html"><strong aria-hidden="true">3.5.</strong> 用户态中断的利与弊</a></li><li class="chapter-item expanded "><a href="ch2_6_label_system.html"><strong aria-hidden="true">3.6.</strong> 标签系统</a></li></ol></li><li class="chapter-item expanded "><a href="ch3_0_implementation.html"><strong aria-hidden="true">4.</strong> 实现</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch3_1_hardware_and_emulator.html"><strong aria-hidden="true">4.1.</strong> 硬件与模拟器</a></li><li class="chapter-item expanded "><a href="ch3_2_bootloader.html"><strong aria-hidden="true">4.2.</strong> 启动器与 SBI</a></li><li class="chapter-item expanded "><a href="ch3_3_kernel.html"><strong aria-hidden="true">4.3.</strong> 操作系统内核</a></li><li class="chapter-item expanded "><a href="ch3_4_user_app.html"><strong aria-hidden="true">4.4.</strong> 用户应用程序</a></li></ol></li><li class="chapter-item expanded "><a href="ch4_0_demo.html"><strong aria-hidden="true">5.</strong> 演示</a></li><li class="chapter-item expanded "><a href="ch5_0_reference.html"><strong aria-hidden="true">6.</strong> 参考</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -168,37 +168,23 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="参考"><a class="header" href="#参考">参考</a></h1>
-<ul>
-<li><a href="https://github.com/riscv/riscv-isa-manual">RISC-V Instruction Set Manual</a></li>
-<li><a href="https://man7.org/linux/man-pages/man7/cgroups.7.html">cgroups(7) — Linux manual page</a></li>
-<li><a href="https://www.intel.cn/content/www/cn/zh/architecture-and-technology/resource-director-technology.html">英特尔 ® 资源调配技术 (英特尔 ® RDT)</a></li>
-<li><a href="https://developer.arm.com/documentation/ddi0598/latest">Arm Architecture Reference Manual Supplement Memory System Resource Partitioning and Monitoring (MPAM), for Armv8-A</a></li>
-<li><a href="https://carrv.github.io/2017/papers/yu-labeled_riscv-carrv2017.pdf">Labeled RISC-V: A New Perspective on Software-Defined Architecture</a></li>
-<li><a href="https://github.com/TianhuaTao/uCore-SMP/">uCore-SMP GitHub 仓库</a></li>
-<li><a href="https://github.com/LvNA-system/labeled-RISC-V/tree/master/fpga">labeled-RISC-V GitHub 仓库</a></li>
-<li><a href="https://www.xilinx.com/products/boards-and-kits/ek-u1-zcu102-g.html">Zynq UltraScale+ MPSoC ZCU102 Evaluation Kit</a></li>
-<li><a href="https://github.com/chipsalliance/rocket-chip">Rocket Chip Generator</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/164503398">令牌桶工作原理</a></li>
-<li><a href="https://github.com/luojia65/rustsbi/tree/master/platform/qemu">RustSBI GitHub 仓库</a></li>
-<li><a href="https://www.xilinx.com/support/documentation/ip_documentation/axi_uartlite/v2_0/pg142-axi-uartlite.pdf">AXI UART Lite v2.0 LogiCORE IP Product Guide</a></li>
-<li><a href="https://five-embeddev.com/riscv-isa-manual/latest/supervisor.html#sec:translation">RISC-V Page-Based Virtual-Memory Systems</a></li>
-<li><a href="https://github.com/Gallium70/labeled-RISC-V-reproduction-note">在 FPGA 上复现标签化 RISC-V 架构——踩坑指南</a></li>
-<li><a href="https://github.com/Gallium70/lrv-rust-bl">Labeled RISC-V Rust Bootloader GitHub 仓库</a></li>
-<li><a href="https://github.com/TianhuaTao/uCore-SMP/tree/label-riscv">标签化 uCore-SMP GitHub 仓库</a></li>
-<li><a href="https://github.com/Gallium70/labeled-RISC-V-boot">labeled-RISC-V-boot GitHub 仓库</a></li>
-</ul>
+                        <h1 id="设计"><a class="header" href="#设计">设计</a></h1>
+<p>本章将介绍我们对于本项目的设计思路，即我们“为什么”要这么做。</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="ch4_example.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="ch1_1_user_trap_flow.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
+                        
+                            <a rel="next" href="ch2_1_trap_comparison.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
                         
 
                         <div style="clear: both"></div>
@@ -208,11 +194,15 @@
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a rel="prev" href="ch4_example.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="ch1_1_user_trap_flow.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
+                
+                    <a rel="next" href="ch2_1_trap_comparison.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
                 
             </nav>
 
