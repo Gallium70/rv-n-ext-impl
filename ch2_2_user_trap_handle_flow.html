@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>简介 - Risc-V Extension N Implementation</title>
+        <title>用户态中断的处理流程 - Risc-V Extension N Implementation</title>
         
         
 
@@ -98,7 +98,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html" class="active"><strong aria-hidden="true">1.</strong> 简介</a></li><li class="chapter-item expanded "><a href="ch1_0_background.html"><strong aria-hidden="true">2.</strong> 项目背景</a></li><li class="chapter-item expanded "><a href="ch2_0_design.html"><strong aria-hidden="true">3.</strong> 系统设计</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch2_1_n_ext_spec.html"><strong aria-hidden="true">3.1.</strong> N 扩展规范草案</a></li><li class="chapter-item expanded "><a href="ch2_2_user_trap_handle_flow.html"><strong aria-hidden="true">3.2.</strong> 用户态中断的处理流程</a></li><li class="chapter-item expanded "><a href="ch2_3_external_interrupt_and_plic.html"><strong aria-hidden="true">3.3.</strong> 外部中断与 PLIC</a></li><li class="chapter-item expanded "><a href="ch2_4_n_ext_on_qemu_and_fpga.html"><strong aria-hidden="true">3.4.</strong> QEMU 和 FPGA 中的 N 扩展支持</a></li><li class="chapter-item expanded "><a href="ch2_5_bootloader.html"><strong aria-hidden="true">3.5.</strong> 启动器与 SBI</a></li><li class="chapter-item expanded "><a href="ch2_6_user_trap_management.html"><strong aria-hidden="true">3.6.</strong> 内核对用户态中断的管理</a></li><li class="chapter-item expanded "><a href="ch2_7_user_trap_usage.html"><strong aria-hidden="true">3.7.</strong> 用户态中断的使用方案</a></li><li class="chapter-item expanded "><a href="ch2_8_rcore_n_smp.html"><strong aria-hidden="true">3.8.</strong> rCore-N 的多核改造</a></li></ol></li><li class="chapter-item expanded "><a href="ch3_0_user_guide.html"><strong aria-hidden="true">4.</strong> 使用方法</a></li><li class="chapter-item expanded "><a href="ch4_0_test_and_demo.html"><strong aria-hidden="true">5.</strong> 系统测试与演示程序</a></li><li class="chapter-item expanded "><a href="ch5_0_plan_and_progress.html"><strong aria-hidden="true">6.</strong> 开发计划与进展</a></li><li class="chapter-item expanded "><a href="ch6_0_problem_and_solutions.html"><strong aria-hidden="true">7.</strong> 遇到的主要问题和解决方法</a></li><li class="chapter-item expanded "><a href="ch7_0_cooperation.html"><strong aria-hidden="true">8.</strong> 分工与协作</a></li><li class="chapter-item expanded "><a href="ch8_0_repo_structure.html"><strong aria-hidden="true">9.</strong> 提交仓库目录和文件描述</a></li><li class="chapter-item expanded "><a href="ch9_0_summary.html"><strong aria-hidden="true">10.</strong> 比赛收获</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> 简介</a></li><li class="chapter-item expanded "><a href="ch1_0_background.html"><strong aria-hidden="true">2.</strong> 项目背景</a></li><li class="chapter-item expanded "><a href="ch2_0_design.html"><strong aria-hidden="true">3.</strong> 系统设计</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch2_1_n_ext_spec.html"><strong aria-hidden="true">3.1.</strong> N 扩展规范草案</a></li><li class="chapter-item expanded "><a href="ch2_2_user_trap_handle_flow.html" class="active"><strong aria-hidden="true">3.2.</strong> 用户态中断的处理流程</a></li><li class="chapter-item expanded "><a href="ch2_3_external_interrupt_and_plic.html"><strong aria-hidden="true">3.3.</strong> 外部中断与 PLIC</a></li><li class="chapter-item expanded "><a href="ch2_4_n_ext_on_qemu_and_fpga.html"><strong aria-hidden="true">3.4.</strong> QEMU 和 FPGA 中的 N 扩展支持</a></li><li class="chapter-item expanded "><a href="ch2_5_bootloader.html"><strong aria-hidden="true">3.5.</strong> 启动器与 SBI</a></li><li class="chapter-item expanded "><a href="ch2_6_user_trap_management.html"><strong aria-hidden="true">3.6.</strong> 内核对用户态中断的管理</a></li><li class="chapter-item expanded "><a href="ch2_7_user_trap_usage.html"><strong aria-hidden="true">3.7.</strong> 用户态中断的使用方案</a></li><li class="chapter-item expanded "><a href="ch2_8_rcore_n_smp.html"><strong aria-hidden="true">3.8.</strong> rCore-N 的多核改造</a></li></ol></li><li class="chapter-item expanded "><a href="ch3_0_user_guide.html"><strong aria-hidden="true">4.</strong> 使用方法</a></li><li class="chapter-item expanded "><a href="ch4_0_test_and_demo.html"><strong aria-hidden="true">5.</strong> 系统测试与演示程序</a></li><li class="chapter-item expanded "><a href="ch5_0_plan_and_progress.html"><strong aria-hidden="true">6.</strong> 开发计划与进展</a></li><li class="chapter-item expanded "><a href="ch6_0_problem_and_solutions.html"><strong aria-hidden="true">7.</strong> 遇到的主要问题和解决方法</a></li><li class="chapter-item expanded "><a href="ch7_0_cooperation.html"><strong aria-hidden="true">8.</strong> 分工与协作</a></li><li class="chapter-item expanded "><a href="ch8_0_repo_structure.html"><strong aria-hidden="true">9.</strong> 提交仓库目录和文件描述</a></li><li class="chapter-item expanded "><a href="ch9_0_summary.html"><strong aria-hidden="true">10.</strong> 比赛收获</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -168,91 +168,60 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="软硬协同的用户态中断"><a class="header" href="#软硬协同的用户态中断">软硬协同的用户态中断</a></h1>
-<p>注：<strong>该文档正在修订中，内容可能发生大幅变化</strong></p>
-<h2 id="目标"><a class="header" href="#目标">目标</a></h2>
-<p>本项目在现有 <a href="https://five-embeddev.com/riscv-isa-manual/latest/n.html">RISC-V 用户态中断扩展规范草案</a> 的基础上将其进一步完善，提出一种符合该规范的模拟器和 FPGA 实现，并基于用户态中断在内核中实现优化的信号和 io_uring 等跨进程通信机制，展示其设计和性能优势。</p>
-<h2 id="项目设计"><a class="header" href="#项目设计">项目设计</a></h2>
-<p>项目架构设计如下：</p>
-<p><img src="assets/proj.svg" alt="arch" /></p>
+                        <h1 id="用户态中断与异常的处理流程"><a class="header" href="#用户态中断与异常的处理流程">用户态中断与异常的处理流程</a></h1>
+<p><img src="assets/user_trap_flow.drawio.svg" alt="用户态中断与异常的处理流程" /></p>
+<h2 id="中断的产生"><a class="header" href="#中断的产生">中断的产生</a></h2>
+<p>与 M 态和 S 态类似，中断分为软件中断 (Software Interrupt)、时钟中断 (Timer Interrupt) 和外部中断 (External Interrupt)。</p>
+<blockquote>
+<p>方便起见，三类中断会简称为 xSI、xTI、xEI，其中 x 为特权级。</p>
+</blockquote>
+<p>硬件或软件将 <code>uip.UXIP</code> (X 表示中断种类) 置为 1 ，硬件检测发现 <code>uip</code> 非零，进入中断的判断流程。</p>
+<p>首先检查该中断是否被委托给用户态处理，即 <code>sideleg</code> 寄存器中对应的位是否为 1；如果为真，检查用户态全局中断使能是否为真，即 <code>ustatus.UIE</code> 是否为 1 ；若仍为真，再检查该中断是否被使能，即 <code>uie.UXIE</code> 是否为 1 ；如果还为真，则触发中断处理的流程。</p>
+<blockquote>
+<p><strong>注意</strong></p>
+<p>上述寄存器中，<code>uie</code> <code>uip</code> 为 <code>mie</code> <code>mip</code> 的子集，即读写会同时作用于所有的 <code>xip</code> <code>xie</code> 或它们本就是同一寄存器。而 <code>ustatus</code> 至少 <code>UIE</code> 和 <code>UPIE</code> 与 <code>mstatus</code> 中的相同位相同。</p>
+<p>虽然上述中断产生的流程中有判断次序，实际实现中一般使用组合逻辑，将寄存器值进行位与来判断，可以认为是同时判断的。</p>
+</blockquote>
+<h2 id="异常的产生"><a class="header" href="#异常的产生">异常的产生</a></h2>
+<p>当异常发生时，硬件只检查 <code>sedeleg</code> 寄存器中对应的位是否为 1，若为真则触发异常的处理流程。</p>
+<p>在 RISC-V 中，中断和异常的处理流程是统一的，下面出于描述简单考虑，多数情况下围绕中断进行描述。</p>
+<h2 id="中断的处理"><a class="header" href="#中断的处理">中断的处理</a></h2>
+<p>在上述的产生流程后，处理器开始进行一些预处理：</p>
 <ul>
-<li>模拟器：修改 QEMU 5.0，在其中添加 N 扩展支持</li>
-<li>FPGA：基于中科院计算所的<a href="https://github.com/LvNA-system/labeled-RISC-V/tree/master/fpga">标签化 RISC-V 架构</a>，添加 N 扩展支持</li>
-<li>启动器与 SBI：在 FPGA 平台上使用基于 RustSBI 开发的 <a href="https://github.com/Gallium70/lrv-rust-bl">lrv-rust-bl</a> ，在 QEMU 上 uCore-SMP 系统使用 OpenSBI ，rCore 系统使用 RustSBI</li>
-<li>操作系统：选择 <a href="https://github.com/TianhuaTao/uCore-SMP">uCore-SMP</a> 和 <a href="https://github.com/duskmoon314/rCore-N">rCore-N</a></li>
+<li>设置 <code>ustatus.UPIE</code> 为 <code>ustatus.UIE</code> 的值，并置 <code>ustatus.UIE</code> 为 0</li>
+<li>根据中断类型设置 <code>ucause</code></li>
+<li>设置 <code>uepc</code> 为发生中断或异常时的 <code>pc</code></li>
+<li>(可选) 设置 <code>utval</code></li>
+<li>根据 <code>utvec</code> 的最低二位和高位的基地址，跳转到设置好的中断处理程序</li>
 </ul>
-<h3 id="文件结构"><a class="header" href="#文件结构">文件结构</a></h3>
-<pre><code>.
-├── README.md
-├── docs                docs in mdbook structure
-├── Labeled-uCore-SMP   uCore SMP with labeled RISC-V support
-├── lrv-rust-bl         Labeled RISC-V fpga bootloader based on RustSBI
-├── qemu                qemu modified by Campbell He
-├── qemu-build          folder holding qemu build artifacts
-├── rCore-N             rCore with N extension
-└── rv-csr-test         N extension simple test program
-</code></pre>
-<h2 id="开发进展"><a class="header" href="#开发进展">开发进展</a></h2>
-<h3 id="qemu-与-fpga"><a class="header" href="#qemu-与-fpga">QEMU 与 FPGA</a></h3>
+<p>中断处理程序需要完成以下工作：</p>
 <ul>
-<li><input disabled="" type="checkbox" checked=""/>
-在 QEMU 中添加 N 扩展支持</li>
-<li><input disabled="" type="checkbox" checked=""/>
-在 FPGA 开发板上部署标签化 RISC-V 架构</li>
-<li><input disabled="" type="checkbox"/>
-增加 N 扩展的 Chisel 代码</li>
+<li>保存现场</li>
+<li>如果 <code>utvec</code> 为 direct 模式，根据 <code>ucause</code> 执行相应的处理程序</li>
+<li>如果 <code>utvec</code> 为 vector 模式，执行处理程序</li>
+<li>恢复现场</li>
 </ul>
-<h3 id="操作系统"><a class="header" href="#操作系统">操作系统</a></h3>
+<p>中断处理程序通常需要保存和恢复的现场有：</p>
 <ul>
-<li>rCore
-<ul>
-<li><input disabled="" type="checkbox" checked=""/>
-添加 N 扩展支持</li>
-<li><input disabled="" type="checkbox"/>
-适配 FPGA 平台</li>
-<li><input disabled="" type="checkbox"/>
-适配标签机制</li>
-<li><input disabled="" type="checkbox"/>
-多核支持</li>
-<li><input disabled="" type="checkbox" checked=""/>
-实现信号机制</li>
-<li><input disabled="" type="checkbox"/>
-实现 io_uring</li>
+<li>x1-x31 通用寄存器 (如果确定中断处理程序中不会使用到某些寄存器，可以省去保存和恢复)</li>
+<li><code>ustatus</code> (可能需要通过修改 <code>ustatus</code> 来改变 CPU 状态)</li>
+<li><code>uepc</code> (可能需要通过修改进一步触发 S 态的中断/异常)</li>
+<li><strong>我们尚未注意到的但需要保存和恢复的寄存器</strong></li>
 </ul>
-</li>
-<li>uCore-SMP
-<ul>
-<li><input disabled="" type="checkbox"/>
-添加 N 扩展支持</li>
-<li><input disabled="" type="checkbox" checked=""/>
-适配 FPGA 平台</li>
-<li><input disabled="" type="checkbox" checked=""/>
-适配标签机制</li>
-<li><input disabled="" type="checkbox"/>
-实现信号机制</li>
-<li><input disabled="" type="checkbox"/>
-实现 io_uring</li>
-</ul>
-</li>
-</ul>
-<h3 id="应用程序"><a class="header" href="#应用程序">应用程序</a></h3>
-<ul>
-<li><input disabled="" type="checkbox" checked=""/>
-验证 N 扩展正常工作</li>
-<li><input disabled="" type="checkbox" checked=""/>
-信号机制测例</li>
-<li><input disabled="" type="checkbox"/>
-io_uring 测例</li>
-</ul>
+<p><img src="assets/trap.drawio.svg" alt="中断与异常的硬件处理流程" /></p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
+                            <a rel="prev" href="ch2_1_n_ext_spec.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
 
                         
-                            <a rel="next" href="ch1_0_background.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="ch2_3_external_interrupt_and_plic.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -264,9 +233,13 @@ io_uring 测例</li>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
+                    <a rel="prev" href="ch2_1_n_ext_spec.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
 
                 
-                    <a rel="next" href="ch1_0_background.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="ch2_3_external_interrupt_and_plic.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 
