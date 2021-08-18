@@ -718,6 +718,10 @@ just run
 <p>后者为时钟中断和信号的演示程序，程序启动时设置 10 个间隔一秒的定时器，并启动 uart_ext 进程；在时钟中断处理函数中，将 0xdeadbeef00 + t（t 为中断次数）作为消息内容发送给 uart_ext 进程；在最后一次中断时，向 uart_ext 发送 15，同时自己退出。</p>
 <p>二者运行序列图如下：</p>
 <p><img src="assets/demo_seq.svg" alt="demo_seq" /></p>
+<p>在 QEMU 上运行的截图如下，其中调试信息串口 &quot;DEBUG&quot; 和 &quot;INFO&quot; 后的数字表示硬件线程编号：</p>
+<p><img src="assets/demo_qemu.png" alt="demo_qemu" /></p>
+<p>在 FPGA 上运行的截图如下，与前者内容基本相同：</p>
+<p><img src="assets/demo_fpga.png" alt="demo_fpga" /></p>
 <div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="开发计划与重大进展"><a class="header" href="#开发计划与重大进展">开发计划与重大进展</a></h1>
 <h2 id="计划"><a class="header" href="#计划">计划</a></h2>
 <table><thead><tr><th>日期</th><th>计划</th></tr></thead><tbody>
