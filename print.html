@@ -853,7 +853,25 @@ pub fn exit_current_and_run_next(exit_code: i32) {
 当进程在硬件线程 1 上领取到 A 外设中断并离开时，内核会在 3 号上下文禁用 A 外设的中断使能，以避免随后在 1 上运行的进程被 A 外设中断；当进程被调度到硬件线程 2 上运行时，内核会在 6 号上下文中启用 A 外设中断。</p>
 <p>PLIC 并不要求领取和完成在同一上下文中，但是只有中断在相应上下文中被使能时，领取和完成才是有效的。如果进程在硬件线程 2 上运行时，仍然向 PLIC 提交 3 号上下文的完成请求，由于此上下文中 A 外设没有被使能，故此次完成无效，A 外设的中断会保持屏蔽状态，进程便再也无法收到该中断。相反，进程向 PLIC 提交 6 号上下文的完成请求是有效的，A 外设中断屏蔽被解除，程序能够继续正常运行。</p>
 <p>因此，用户程序提交完成请求时，应始终使用当前上下文提交；或者在所有上下文中都提交一遍。</p>
-<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="分工协作"><a class="header" href="#分工协作">分工协作</a></h1>
+<p>贺鲲鹏：</p>
+<ul>
+<li>扩展规范草案</li>
+<li>用户态中断处理流程</li>
+<li>QEMU 修改</li>
+<li>rCore-N 多核改造</li>
+<li>PLIC 和串口底层驱动</li>
+</ul>
+<p>尤予阳：</p>
+<ul>
+<li>FPGA 修改</li>
+<li>FPGA 启动器编写</li>
+<li>rCore-N 移植</li>
+<li>内核对用户态中断管理机制</li>
+<li>演示程序</li>
+<li>使用教程编写</li>
+</ul>
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
