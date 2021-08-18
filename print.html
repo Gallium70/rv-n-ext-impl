@@ -265,6 +265,7 @@
 <div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="系统设计-1"><a class="header" href="#系统设计-1">系统设计</a></h1>
 <p>本章将介绍我们对于本项目的设计思路，即我们“为什么”要这么做。</p>
 <div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="n-扩展规范草案----omit-in-toc---"><a class="header" href="#n-扩展规范草案----omit-in-toc---">N 扩展规范草案 <!-- omit in toc --></a></h1>
+<p>本节描述 N 扩展的 CPU 设计规范草案，即支持 N 扩展的 CPU 需要添加哪些寄存器和指令。关于用户态中断的流程和使用请参见后文。</p>
 <blockquote>
 <p>目前此扩展适用于实现了 M/S/U 三种特权级和 CLINT+PLIC 的系统，暂不考虑与 H 扩展以及 AIA、CLIC、ACLINT 等中断机制的兼容或适配。</p>
 </blockquote>
@@ -288,6 +289,7 @@
 </li>
 </ul>
 <h2 id="n-扩展的-csr"><a class="header" href="#n-扩展的-csr">N 扩展的 CSR</a></h2>
+<p>与 M 和 S 态类似，U 态也有一系列存储中断相关信息的寄存器。</p>
 <h3 id="用户状态寄存器-ustatus"><a class="header" href="#用户状态寄存器-ustatus">用户状态寄存器 (<code>ustatus</code>)</a></h3>
 <pre><code>UXLEN-1 5   4    3  1    0
 ┌────────┬──────┬──────┬─────┐
