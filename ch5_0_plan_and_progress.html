@@ -169,6 +169,16 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="开发计划与重大进展"><a class="header" href="#开发计划与重大进展">开发计划与重大进展</a></h1>
+<h2 id="计划"><a class="header" href="#计划">计划</a></h2>
+<table><thead><tr><th>日期</th><th>计划</th></tr></thead><tbody>
+<tr><td>7.5-7.11</td><td>查看 Rocket 的实现，确定中断的实际响应逻辑和 PLIC 的功能；在 rCore-N 中完成用户态中断实现的信号</td></tr>
+<tr><td>7.12-7.18</td><td>分析 PLIC 的实现和如何工作，应如何操作 PLIC</td></tr>
+<tr><td>7.19-7.25</td><td>在 rCore-N 中实现内核对用户态中断的管理机制，实现基本的演示程序</td></tr>
+<tr><td>7.26-8.1</td><td>在 rCore-N 中实现用户态软件中断和时钟中断的应用，设计演示程序</td></tr>
+<tr><td>8.2-8.8</td><td>在 FPGA 中实现相同功能，对 rCore-N 进行多核改造</td></tr>
+<tr><td>8.9-8.15</td><td>继续完成 rCore-N 的多核改造，完善测试程序</td></tr>
+<tr><td>8.16-8.18</td><td>完善测试程序和文档</td></tr>
+</tbody></table>
 <h2 id="进展"><a class="header" href="#进展">进展</a></h2>
 <h3 id="2021-04-28"><a class="header" href="#2021-04-28">2021-04-28</a></h3>
 <p>lvr-rust-bl 编写完成，成功在 FPGA 中运行 rustsbi 为依赖的 bootloader。</p>
@@ -178,7 +188,7 @@
 <p>修改 rustsbi-qemu，放通增加的串口与 PLIC 所在地址。</p>
 <h3 id="2021-07-12"><a class="header" href="#2021-07-12">2021-07-12</a></h3>
 <p>讨论决定参考 <a href="https://github.com/sgmarz/osblog"><code>sgmarz/osblog</code></a> 使用 PLIC。</p>
-<p>分析 QEMU 和 FPGA 中 PLIC 的实现方式，确定 PLIC 的大致使用方式。</p>
+<p>开始分析 QEMU 和 FPGA 中 PLIC 的实现方式，确定 PLIC 的大致使用方式。</p>
 <h3 id="2021-07-18"><a class="header" href="#2021-07-18">2021-07-18</a></h3>
 <p>将操作 PLIC 的基本 rust 代码整理，拆为 <code>rv-plic</code> crate 以方便后期复用。</p>
 <p>在 QEMU 中增加 PLIC 的用户态上下文，并在 rCore-N 中增加相应驱动。</p>
