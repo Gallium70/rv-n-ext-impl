@@ -502,7 +502,18 @@ io_uring 测例</li>
 <p>该部分基于 RustSBI 的 QEMU 参考实现进行开发，使用 Rust 语言编写。PL 所用串口外设为 UART Lite，与 QEMU 中所用的 NS16550A 不同，需要重新实现其初始化和收发代码。</p>
 <p>该 RISC-V 核心不支持非对齐 load/store 指令，此类指令会触发相应的非对齐异常，但同时内核和应用程序中又无法完全避免这些指令，为了实现二者的兼容，固件在相应的异常处理例程中解码触发异常的指令，根据其选择的寄存器和非对齐地址偏移量，使用两次对齐的 load/store 进行模拟。需要注意的是，该平台同时支持压缩指令（C）扩展，因而指令长度可能为 2 或 4 字节，指令本身可能处于非对齐地址上，且 load 和 store 各有三种（常规指令、基于通用寄存器中地址的压缩指令、基于栈指针寄存器中地址的压缩指令），指令格式不尽相同，解码过程较为繁琐。</p>
 <p>该启动器代码仓库位于 https://github.com/Gallium70/lrv-rust-bl ，对该启动器更详细的介绍见代码仓库中相应的文档。</p>
-<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="用户态中断的管理"><a class="header" href="#用户态中断的管理">用户态中断的管理</a></h1>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="启动器与-sbi"><a class="header" href="#启动器与-sbi">启动器与 SBI</a></h1>
+<p>我们基于 rustsbi 实现 QEMU 模拟器和 FPGA 上 OS 的启动与 sbi 层。</p>
+<h2 id="rustsbi-qemu"><a class="header" href="#rustsbi-qemu">rustsbi-qemu</a></h2>
+<p>我们基于 <code>rustsbi/rustsbi-qemu</code>，放开了对地址的保护，并添加了暂被 rustsbi 组织移除的多核支持以及中断委托。项目位于 <a href="https://github.com/duskmoon314/rustsbi-qemu/tree/legacy-multicore"><code>duskmoon314/rustsbi-qemu:legacy-multicore</code></a>。</p>
+<h3 id="地址保护"><a class="header" href="#地址保护">地址保护</a></h3>
+<p>在 RISC-V 中，有用于保护物理地址的寄存器 <code>pmpcfg</code> 和 <code>pmpaddr</code>。原本 rustsbi-qemu 只允许 sbi 部分和 OS 所在的地址空间可以使用，而并未允许 PLIC、串口等设备所在的物理地址。出于调试方便，我们放开了所有物理地址。</p>
+<h3 id="中断委托"><a class="header" href="#中断委托">中断委托</a></h3>
+<p>在修改后的 rustsbi-qemu 中，用户态的三种中断皆被 sbi 委托给 S 态的 OS，由 OS 决定如何处理。</p>
+<h3 id="多核启动"><a class="header" href="#多核启动">多核启动</a></h3>
+<p>最新版的 rustsbi-qemu 正在逐步支持 RISC-V sbi 标准的 hsm 扩展，因而移除了之前的多核启动方案。我们重新支持了多核启动，通过使用 <code>wfi</code> 指令，将核 0 以外的核卡在一个循环中，直到一个 M 态软件中断来让其余核跳出循环，进入 sbi 和 os 的设置与运行。</p>
+<h2 id="lrv-rust-bl"><a class="header" href="#lrv-rust-bl">lrv-rust-bl</a></h2>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="用户态中断的管理"><a class="header" href="#用户态中断的管理">用户态中断的管理</a></h1>
 <h2 id="与其他特权级中断的比较"><a class="header" href="#与其他特权级中断的比较">与其他特权级中断的比较</a></h2>
 <p>RISC-V 特权级指令架构规范中已经规定了机器态（M）和内核态（S）的中断规范，以及二者之间的互动机制，如特权级屏蔽、中断委托等。设计用户态（U）中断时，我们在一定程度上参照了现有的 S 态中断机制，并将 M 和 S 之间的关系平移到了 S 和 U 上，以保持整个中断架构的一致性。三种中断的完整处理流程图如下：</p>
 <p><img src="assets/full_trap_flow.drawio.svg" alt="完整中断处理流程" /></p>
@@ -631,7 +642,7 @@ Lower privilege levels do not have their own <code>timecmp</code> registers. Ins
 </ol>
 <div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="rcore-n-的多核改造"><a class="header" href="#rcore-n-的多核改造">rCore-N 的多核改造</a></h1>
 <p>在前文中，我们描述了用户态中断的机制和功能。然而基于单核环境的 rCore-Tutorial v3.5 改造的 rCore-N 并不能发挥出用户态中断的优势，所以我们需要对其进行多核改造。</p>
-<h2 id="多核启动"><a class="header" href="#多核启动">多核启动</a></h2>
+<h2 id="多核启动-1"><a class="header" href="#多核启动-1">多核启动</a></h2>
 <h3 id="rustsbi-qemu-的多核启动"><a class="header" href="#rustsbi-qemu-的多核启动">rustsbi-qemu 的多核启动</a></h3>
 <p>对于 SMP 架构，多核启动的一种简单方法是先启动核 0，在核 0 完成 OS 的启动后，通过某种方式“唤醒”其余的核。在 rustsbi-qemu 中，所有核在上电后都直接启动，执行到 <code>rust_main</code> 中的 <code>mp_hook</code> 函数。在 <code>mp_hook</code> 中，编号非 0 的核都会陷入循环，等待“M 态软件中断”来跳出循环，执行 sbi 层的初始化配置后跳转 OS。</p>
 <h3 id="rcore-n-的多核启动"><a class="header" href="#rcore-n-的多核启动">rCore-N 的多核启动</a></h3>

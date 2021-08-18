@@ -168,7 +168,18 @@
 
                 <div id="content" class="content">
                     <main>
-                        
+                        <h1 id="启动器与-sbi"><a class="header" href="#启动器与-sbi">启动器与 SBI</a></h1>
+<p>我们基于 rustsbi 实现 QEMU 模拟器和 FPGA 上 OS 的启动与 sbi 层。</p>
+<h2 id="rustsbi-qemu"><a class="header" href="#rustsbi-qemu">rustsbi-qemu</a></h2>
+<p>我们基于 <code>rustsbi/rustsbi-qemu</code>，放开了对地址的保护，并添加了暂被 rustsbi 组织移除的多核支持以及中断委托。项目位于 <a href="https://github.com/duskmoon314/rustsbi-qemu/tree/legacy-multicore"><code>duskmoon314/rustsbi-qemu:legacy-multicore</code></a>。</p>
+<h3 id="地址保护"><a class="header" href="#地址保护">地址保护</a></h3>
+<p>在 RISC-V 中，有用于保护物理地址的寄存器 <code>pmpcfg</code> 和 <code>pmpaddr</code>。原本 rustsbi-qemu 只允许 sbi 部分和 OS 所在的地址空间可以使用，而并未允许 PLIC、串口等设备所在的物理地址。出于调试方便，我们放开了所有物理地址。</p>
+<h3 id="中断委托"><a class="header" href="#中断委托">中断委托</a></h3>
+<p>在修改后的 rustsbi-qemu 中，用户态的三种中断皆被 sbi 委托给 S 态的 OS，由 OS 决定如何处理。</p>
+<h3 id="多核启动"><a class="header" href="#多核启动">多核启动</a></h3>
+<p>最新版的 rustsbi-qemu 正在逐步支持 RISC-V sbi 标准的 hsm 扩展，因而移除了之前的多核启动方案。我们重新支持了多核启动，通过使用 <code>wfi</code> 指令，将核 0 以外的核卡在一个循环中，直到一个 M 态软件中断来让其余核跳出循环，进入 sbi 和 os 的设置与运行。</p>
+<h2 id="lrv-rust-bl"><a class="header" href="#lrv-rust-bl">lrv-rust-bl</a></h2>
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
