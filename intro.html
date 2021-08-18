@@ -98,7 +98,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html" class="active"><strong aria-hidden="true">1.</strong> 简介</a></li><li class="chapter-item expanded "><a href="ch1_0_background.html"><strong aria-hidden="true">2.</strong> 项目背景与现有工作</a></li><li class="chapter-item expanded "><a href="ch2_0_design.html"><strong aria-hidden="true">3.</strong> 系统设计</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch2_1_n_ext_spec.html"><strong aria-hidden="true">3.1.</strong> N 扩展规范草案</a></li><li class="chapter-item expanded "><a href="ch2_2_user_trap_handle_flow.html"><strong aria-hidden="true">3.2.</strong> 用户态中断的处理流程</a></li><li class="chapter-item expanded "><a href="ch2_3_external_interrupt_and_plic.html"><strong aria-hidden="true">3.3.</strong> 外部中断与 PLIC</a></li><li class="chapter-item expanded "><a href="ch2_4_n_ext_on_qemu_and_fpga.html"><strong aria-hidden="true">3.4.</strong> QEMU 和 FPGA 中的 N 扩展支持</a></li><li class="chapter-item expanded "><a href="ch2_5_bootloader.html"><strong aria-hidden="true">3.5.</strong> 启动器与 SBI</a></li><li class="chapter-item expanded "><a href="ch2_6_user_trap_management.html"><strong aria-hidden="true">3.6.</strong> 内核对用户态中断的管理</a></li><li class="chapter-item expanded "><a href="ch2_7_user_trap_usage.html"><strong aria-hidden="true">3.7.</strong> 用户态中断扩展的使用</a></li><li class="chapter-item expanded "><a href="ch2_8_rcore_n_smp.html"><strong aria-hidden="true">3.8.</strong> rCore-N 的多核改造</a></li></ol></li><li class="chapter-item expanded "><a href="ch3_0_user_guide.html"><strong aria-hidden="true">4.</strong> 使用方法</a></li><li class="chapter-item expanded "><a href="ch4_0_test_and_demo.html"><strong aria-hidden="true">5.</strong> 系统测试与演示程序</a></li><li class="chapter-item expanded "><a href="ch5_0_plan_and_progress.html"><strong aria-hidden="true">6.</strong> 开发计划与进展</a></li><li class="chapter-item expanded "><a href="ch6_0_problem_and_solutions.html"><strong aria-hidden="true">7.</strong> 遇到的主要问题和解决方法</a></li><li class="chapter-item expanded "><a href="ch7_0_cooperation.html"><strong aria-hidden="true">8.</strong> 分工与协作</a></li><li class="chapter-item expanded "><a href="ch8_0_repo_structure.html"><strong aria-hidden="true">9.</strong> 提交仓库目录和文件描述</a></li><li class="chapter-item expanded "><a href="ch9_0_summary.html"><strong aria-hidden="true">10.</strong> 比赛收获</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html" class="active"><strong aria-hidden="true">1.</strong> 简介</a></li><li class="chapter-item expanded "><a href="ch1_0_background.html"><strong aria-hidden="true">2.</strong> 项目背景与现有工作</a></li><li class="chapter-item expanded "><a href="ch2_0_design.html"><strong aria-hidden="true">3.</strong> 系统设计</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch2_1_n_ext_spec.html"><strong aria-hidden="true">3.1.</strong> N 扩展规范草案</a></li><li class="chapter-item expanded "><a href="ch2_2_user_trap_handle_flow.html"><strong aria-hidden="true">3.2.</strong> 用户态中断的处理流程</a></li><li class="chapter-item expanded "><a href="ch2_3_external_interrupt_and_plic.html"><strong aria-hidden="true">3.3.</strong> 外部中断与 PLIC</a></li><li class="chapter-item expanded "><a href="ch2_4_n_ext_on_qemu_and_fpga.html"><strong aria-hidden="true">3.4.</strong> QEMU 和 FPGA 中的 N 扩展支持</a></li><li class="chapter-item expanded "><a href="ch2_5_bootloader.html"><strong aria-hidden="true">3.5.</strong> 启动器与 SBI</a></li><li class="chapter-item expanded "><a href="ch2_6_user_trap_management.html"><strong aria-hidden="true">3.6.</strong> 内核对用户态中断的管理</a></li><li class="chapter-item expanded "><a href="ch2_7_user_trap_usage.html"><strong aria-hidden="true">3.7.</strong> 用户态中断扩展的使用</a></li><li class="chapter-item expanded "><a href="ch2_8_rcore_n_smp.html"><strong aria-hidden="true">3.8.</strong> rCore-N 的多核改造</a></li></ol></li><li class="chapter-item expanded "><a href="ch3_0_user_guide.html"><strong aria-hidden="true">4.</strong> 使用方法</a></li><li class="chapter-item expanded "><a href="ch4_0_test_and_demo.html"><strong aria-hidden="true">5.</strong> 系统测试与演示程序</a></li><li class="chapter-item expanded "><a href="ch5_0_plan_and_progress.html"><strong aria-hidden="true">6.</strong> 开发计划与进展</a></li><li class="chapter-item expanded "><a href="ch6_0_problem_and_solutions.html"><strong aria-hidden="true">7.</strong> 遇到的主要问题和解决方法</a></li><li class="chapter-item expanded "><a href="ch7_0_cooperation.html"><strong aria-hidden="true">8.</strong> 分工与协作</a></li><li class="chapter-item expanded "><a href="ch8_0_summary.html"><strong aria-hidden="true">9.</strong> 比赛收获</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -169,80 +169,71 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="软硬协同的用户态中断"><a class="header" href="#软硬协同的用户态中断">软硬协同的用户态中断</a></h1>
-<p>注：<strong>该文档正在修订中，内容可能发生大幅变化</strong></p>
 <h2 id="目标"><a class="header" href="#目标">目标</a></h2>
-<p>本项目在现有 <a href="https://five-embeddev.com/riscv-isa-manual/latest/n.html">RISC-V 用户态中断扩展规范草案</a> 的基础上将其进一步完善，提出一种符合该规范的模拟器和 FPGA 实现，并基于用户态中断在内核中实现优化的信号和 io_uring 等跨进程通信机制，展示其设计和性能优势。</p>
-<h2 id="项目设计"><a class="header" href="#项目设计">项目设计</a></h2>
-<p>项目架构设计如下：</p>
+<p>本项目在现有 <a href="https://five-embeddev.com/riscv-isa-manual/latest/n.html">RISC-V 用户态中断扩展规范草案</a> 的基础上将其进一步完善，提出一种符合该规范的模拟器和 FPGA 实现，并基于用户态中断在内核中实现优化的信号机制，在用户态实现一个硬件驱动，展示其设计和性能优势。</p>
+<h2 id="系统设计"><a class="header" href="#系统设计">系统设计</a></h2>
+<p>系统整体架构设计如下：</p>
 <p><img src="assets/proj.svg" alt="arch" /></p>
 <ul>
 <li>模拟器：修改 QEMU 5.0，在其中添加 N 扩展支持</li>
 <li>FPGA：基于中科院计算所的<a href="https://github.com/LvNA-system/labeled-RISC-V/tree/master/fpga">标签化 RISC-V 架构</a>，添加 N 扩展支持</li>
-<li>启动器与 SBI：在 FPGA 平台上使用基于 RustSBI 开发的 <a href="https://github.com/Gallium70/lrv-rust-bl">lrv-rust-bl</a> ，在 QEMU 上 uCore-SMP 系统使用 OpenSBI ，rCore 系统使用 RustSBI</li>
-<li>操作系统：选择 <a href="https://github.com/TianhuaTao/uCore-SMP">uCore-SMP</a> 和 <a href="https://github.com/duskmoon314/rCore-N">rCore-N</a></li>
+<li>启动器与 SBI：在 FPGA 平台上使用基于 RustSBI 开发的 <a href="https://github.com/Gallium70/lrv-rust-bl">lrv-rust-bl</a> ，在 QEMU 上使用修改过的 <a href="https://github.com/duskmoon314/rustsbi-qemu/tree/legacy-multicore">RustSBI-QEMU</a> 以提供多核启动支持</li>
+<li>操作系统：<a href="https://github.com/duskmoon314/rCore-N">rCore-N</a>，能够在多核环境下运行，演示程序也在该仓库中</li>
 </ul>
-<h3 id="文件结构"><a class="header" href="#文件结构">文件结构</a></h3>
+<h3 id="仓库目录和结构"><a class="header" href="#仓库目录和结构">仓库目录和结构</a></h3>
 <pre><code>.
 ├── README.md
 ├── docs                docs in mdbook structure
-├── Labeled-uCore-SMP   uCore SMP with labeled RISC-V support
+├── Labeled-RISC-V-N    Labeled RISC-V with N extension, FPGA code
 ├── lrv-rust-bl         Labeled RISC-V fpga bootloader based on RustSBI
 ├── qemu                qemu modified by Campbell He
 ├── qemu-build          folder holding qemu build artifacts
 ├── rCore-N             rCore with N extension
+├── rustsbi-qemu        rustsbi-qemu with legacy IPI and multicore boot support
 └── rv-csr-test         N extension simple test program
 </code></pre>
-<h2 id="开发进展"><a class="header" href="#开发进展">开发进展</a></h2>
+<h2 id="部分开发进展"><a class="header" href="#部分开发进展">部分开发进展</a></h2>
 <h3 id="qemu-与-fpga"><a class="header" href="#qemu-与-fpga">QEMU 与 FPGA</a></h3>
 <ul>
 <li><input disabled="" type="checkbox" checked=""/>
 在 QEMU 中添加 N 扩展支持</li>
 <li><input disabled="" type="checkbox" checked=""/>
 在 FPGA 开发板上部署标签化 RISC-V 架构</li>
-<li><input disabled="" type="checkbox"/>
-增加 N 扩展的 Chisel 代码</li>
+<li><input disabled="" type="checkbox" checked=""/>
+在标签化 RISC-V 架构中添加 N 扩展支持
+<ul>
+<li><input disabled="" type="checkbox" checked=""/>
+通过基本测试</li>
+<li><input disabled="" type="checkbox" checked=""/>
+单核情况下正常运行 rCore-N</li>
+<li><input disabled="" type="checkbox" checked=""/>
+多核启动和运行</li>
+</ul>
+</li>
+<li><input disabled="" type="checkbox" checked=""/>
+在 QEMU 和 FPGA 中添加额外的串口供用户态程序使用</li>
 </ul>
 <h3 id="操作系统"><a class="header" href="#操作系统">操作系统</a></h3>
 <ul>
-<li>rCore
-<ul>
 <li><input disabled="" type="checkbox" checked=""/>
-添加 N 扩展支持</li>
-<li><input disabled="" type="checkbox"/>
+实现对用户态中断的管理</li>
+<li><input disabled="" type="checkbox" checked=""/>
 适配 FPGA 平台</li>
-<li><input disabled="" type="checkbox"/>
-适配标签机制</li>
-<li><input disabled="" type="checkbox"/>
+<li><input disabled="" type="checkbox" checked=""/>
 多核支持</li>
 <li><input disabled="" type="checkbox" checked=""/>
 实现信号机制</li>
-<li><input disabled="" type="checkbox"/>
-实现 io_uring</li>
-</ul>
-</li>
-<li>uCore-SMP
-<ul>
-<li><input disabled="" type="checkbox"/>
-添加 N 扩展支持</li>
-<li><input disabled="" type="checkbox" checked=""/>
-适配 FPGA 平台</li>
-<li><input disabled="" type="checkbox" checked=""/>
-适配标签机制</li>
-<li><input disabled="" type="checkbox"/>
-实现信号机制</li>
-<li><input disabled="" type="checkbox"/>
-实现 io_uring</li>
-</ul>
-</li>
 </ul>
 <h3 id="应用程序"><a class="header" href="#应用程序">应用程序</a></h3>
 <ul>
 <li><input disabled="" type="checkbox" checked=""/>
 验证 N 扩展正常工作</li>
 <li><input disabled="" type="checkbox" checked=""/>
-信号机制测例</li>
+信号机制演示程序</li>
+<li><input disabled="" type="checkbox" checked=""/>
+用户态串口驱动程序</li>
 <li><input disabled="" type="checkbox"/>
-io_uring 测例</li>
+性能测试</li>
 </ul>
 
                     </main>
