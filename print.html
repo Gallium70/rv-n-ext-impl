@@ -731,16 +731,31 @@ just run
 <p>lvr-rust-bl 编写完成，成功在 FPGA 中运行 rustsbi 为依赖的 bootloader。</p>
 <h3 id="2021-05-25"><a class="header" href="#2021-05-25">2021-05-25</a></h3>
 <p>解决在 QEMU 模拟器中循环进入用户态中断的问题，触发用户态软件中断可以正常进入和退出中断处理程序。</p>
+<h3 id="2021-07-11"><a class="header" href="#2021-07-11">2021-07-11</a></h3>
+<p>修改 rustsbi-qemu，放通增加的串口与 PLIC 所在地址。</p>
+<h3 id="2021-07-12"><a class="header" href="#2021-07-12">2021-07-12</a></h3>
+<p>讨论决定参考 <a href="https://github.com/sgmarz/osblog"><code>sgmarz/osblog</code></a> 使用 PLIC。</p>
+<p>分析 QEMU 和 FPGA 中 PLIC 的实现方式，确定 PLIC 的大致使用方式。</p>
+<h3 id="2021-07-18"><a class="header" href="#2021-07-18">2021-07-18</a></h3>
+<p>将操作 PLIC 的基本 rust 代码整理，拆为 <code>rv-plic</code> crate 以方便后期复用。</p>
+<p>在 QEMU 中增加 PLIC 的用户态上下文，并在 rCore-N 中增加相应驱动。</p>
+<p>在 rCore-N 中添加内核对用户态中断上下文的保存与恢复机制、用户态中断的默认处理函数，增加向内核注册中断的系统调用。</p>
+<h3 id="2021-07-22"><a class="header" href="#2021-07-22">2021-07-22</a></h3>
+<p>将操作串口的基本 rust 代码整理，拆为 <code>uart-rs</code> 项目，方便内核和用户态的复用。</p>
 <h3 id="2021-07-25"><a class="header" href="#2021-07-25">2021-07-25</a></h3>
 <p>在 QEMU 模拟器中增加串口，并将一个串口完全交由用户态进程控制，接收 PLIC 传入的用户态外部中断，并将数据再输回串口。</p>
 <h3 id="2021-07-27"><a class="header" href="#2021-07-27">2021-07-27</a></h3>
 <p>用户态三种中断皆可用，内核使用中断来向用户态进程传递 IPC 信号。并且初步实现一个用户态进程向另一个控制串口的用户态进程发送信息并显示的示例程序。</p>
+<h3 id="2021-08-03"><a class="header" href="#2021-08-03">2021-08-03</a></h3>
+<p>成功启动多核，但由于任务队列实现有误无法正常实现。</p>
+<h3 id="2021-08-04"><a class="header" href="#2021-08-04">2021-08-04</a></h3>
+<p>在 verilator 模拟器中成功运行增加了 N 扩展支持的 FPGA 实现。发现模拟器会给寄存器赋随机初值，尝试修改相关初始化代码。</p>
 <h3 id="2021-08-11"><a class="header" href="#2021-08-11">2021-08-11</a></h3>
 <p>在 QEMU 模拟器中基本完成 rCore-N 的多核改造，开始往 FPGA 上移植。初步完成 FPGA 中串口的用户态驱动。</p>
 <h3 id="2021-08-14"><a class="header" href="#2021-08-14">2021-08-14</a></h3>
 <p>增加 <code>(pid, task)</code> 的映射表，并修改 <code>find_task</code> 的实现。</p>
 <p>FPGA 中串口有 Uart Lite 换为 16550 以解决速率慢的问题。</p>
-<p>解决多核的死锁问题。</p>
+<p>解决多核的死锁问题，成功运行并退出编写的 <code>uart_ext</code> 示例程序。</p>
 <div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="遇到的主要问题与解决方法"><a class="header" href="#遇到的主要问题与解决方法">遇到的主要问题与解决方法</a></h1>
 <h2 id="多核改造中的死锁问题"><a class="header" href="#多核改造中的死锁问题">多核改造中的死锁问题</a></h2>
 <p>在 rCore-N 的改造中，遇到了一个死锁问题：</p>
