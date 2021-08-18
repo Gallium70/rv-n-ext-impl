@@ -723,7 +723,23 @@ just run
 <li>适配更多资源和场景：如图形计算的算力和存储、分布式系统中跨结点的标签传递、嵌入式平台中的实时性保证；</li>
 <li>更多启动器功能：添加 Remote Fence、Hart 状态管理等 SBI 扩展，为操作系统提供更完善的支持。</li>
 </ol>
-<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="遇到的主要问题与解决方法"><a class="header" href="#遇到的主要问题与解决方法">遇到的主要问题与解决方法</a></h1>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="开发计划与重大进展"><a class="header" href="#开发计划与重大进展">开发计划与重大进展</a></h1>
+<h2 id="进展"><a class="header" href="#进展">进展</a></h2>
+<h3 id="2021-04-28"><a class="header" href="#2021-04-28">2021-04-28</a></h3>
+<p>lvr-rust-bl 编写完成，成功在 FPGA 中运行 rustsbi 为依赖的 bootloader。</p>
+<h3 id="2021-05-25"><a class="header" href="#2021-05-25">2021-05-25</a></h3>
+<p>解决在 QEMU 模拟器中循环进入用户态中断的问题，触发用户态软件中断可以正常进入和退出中断处理程序。</p>
+<h3 id="2021-07-25"><a class="header" href="#2021-07-25">2021-07-25</a></h3>
+<p>在 QEMU 模拟器中增加串口，并将一个串口完全交由用户态进程控制，接收 PLIC 传入的用户态外部中断，并将数据再输回串口。</p>
+<h3 id="2021-07-27"><a class="header" href="#2021-07-27">2021-07-27</a></h3>
+<p>用户态三种中断皆可用，内核使用中断来向用户态进程传递 IPC 信号。并且初步实现一个用户态进程向另一个控制串口的用户态进程发送信息并显示的示例程序。</p>
+<h3 id="2021-08-11"><a class="header" href="#2021-08-11">2021-08-11</a></h3>
+<p>在 QEMU 模拟器中基本完成 rCore-N 的多核改造，开始往 FPGA 上移植。初步完成 FPGA 中串口的用户态驱动。</p>
+<h3 id="2021-08-14"><a class="header" href="#2021-08-14">2021-08-14</a></h3>
+<p>增加 <code>(pid, task)</code> 的映射表，并修改 <code>find_task</code> 的实现。</p>
+<p>FPGA 中串口有 Uart Lite 换为 16550 以解决速率慢的问题。</p>
+<p>解决多核的死锁问题。</p>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="遇到的主要问题与解决方法"><a class="header" href="#遇到的主要问题与解决方法">遇到的主要问题与解决方法</a></h1>
 <h2 id="多核改造中的死锁问题"><a class="header" href="#多核改造中的死锁问题">多核改造中的死锁问题</a></h2>
 <p>在 rCore-N 的改造中，遇到了一个死锁问题：</p>
 <p>进程 1 在退出时，内核获取 1 的锁来访问它的信息，同时要获取 0 号进程的锁，将进程 1 的子进程放到 0 号进程的子进程列表中，以避免资源不能正确地释放。同时，0 号进程会调用 <code>wait_pid</code> 系统调用，查看自己的子进程是否有运行结束的，来释放资源。而在 <code>wait_pid</code> 中，会需要获取调用者（0 号进程）与目标进程的锁，来访问它们的信息。</p>
