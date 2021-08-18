@@ -100,7 +100,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> 简介</a></li><li class="chapter-item expanded "><a href="ch1_0_background.html"><strong aria-hidden="true">2.</strong> 项目背景与现有工作</a></li><li class="chapter-item expanded "><a href="ch2_0_design.html"><strong aria-hidden="true">3.</strong> 系统设计</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch2_1_n_ext_spec.html"><strong aria-hidden="true">3.1.</strong> N 扩展规范草案</a></li><li class="chapter-item expanded "><a href="ch2_2_user_trap_handle_flow.html"><strong aria-hidden="true">3.2.</strong> 用户态中断的处理流程</a></li><li class="chapter-item expanded "><a href="ch2_3_external_interrupt_and_plic.html"><strong aria-hidden="true">3.3.</strong> 外部中断与 PLIC</a></li><li class="chapter-item expanded "><a href="ch2_4_n_ext_on_qemu_and_fpga.html"><strong aria-hidden="true">3.4.</strong> QEMU 和 FPGA 中的 N 扩展支持</a></li><li class="chapter-item expanded "><a href="ch2_5_bootloader.html"><strong aria-hidden="true">3.5.</strong> 启动器与 SBI</a></li><li class="chapter-item expanded "><a href="ch2_6_user_trap_management.html"><strong aria-hidden="true">3.6.</strong> 内核对用户态中断的管理</a></li><li class="chapter-item expanded "><a href="ch2_7_user_trap_usage.html"><strong aria-hidden="true">3.7.</strong> 用户态中断扩展的使用</a></li><li class="chapter-item expanded "><a href="ch2_8_rcore_n_smp.html"><strong aria-hidden="true">3.8.</strong> rCore-N 的多核改造</a></li></ol></li><li class="chapter-item expanded "><a href="ch3_0_user_guide.html"><strong aria-hidden="true">4.</strong> 使用方法</a></li><li class="chapter-item expanded "><a href="ch4_0_test_and_demo.html"><strong aria-hidden="true">5.</strong> 系统测试与演示程序</a></li><li class="chapter-item expanded "><a href="ch5_0_plan_and_progress.html"><strong aria-hidden="true">6.</strong> 开发计划与进展</a></li><li class="chapter-item expanded "><a href="ch6_0_problem_and_solutions.html"><strong aria-hidden="true">7.</strong> 遇到的主要问题和解决方法</a></li><li class="chapter-item expanded "><a href="ch7_0_cooperation.html"><strong aria-hidden="true">8.</strong> 分工与协作</a></li><li class="chapter-item expanded "><a href="ch8_0_summary.html"><strong aria-hidden="true">9.</strong> 比赛收获</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> 简介</a></li><li class="chapter-item expanded "><a href="ch1_0_background.html"><strong aria-hidden="true">2.</strong> 项目背景与现有工作</a></li><li class="chapter-item expanded "><a href="ch2_0_design.html"><strong aria-hidden="true">3.</strong> 系统设计</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch2_1_n_ext_spec.html"><strong aria-hidden="true">3.1.</strong> N 扩展规范草案</a></li><li class="chapter-item expanded "><a href="ch2_2_user_trap_handle_flow.html"><strong aria-hidden="true">3.2.</strong> 用户态中断的处理流程</a></li><li class="chapter-item expanded "><a href="ch2_3_external_interrupt_and_plic.html"><strong aria-hidden="true">3.3.</strong> 外部中断与 PLIC</a></li><li class="chapter-item expanded "><a href="ch2_4_n_ext_on_qemu_and_fpga.html"><strong aria-hidden="true">3.4.</strong> QEMU 和 FPGA 中的 N 扩展支持</a></li><li class="chapter-item expanded "><a href="ch2_5_bootloader.html"><strong aria-hidden="true">3.5.</strong> 启动器与 SBI</a></li><li class="chapter-item expanded "><a href="ch2_6_user_trap_management.html"><strong aria-hidden="true">3.6.</strong> 内核对用户态中断的管理</a></li><li class="chapter-item expanded "><a href="ch2_7_user_trap_usage.html"><strong aria-hidden="true">3.7.</strong> 用户态中断扩展的使用</a></li><li class="chapter-item expanded "><a href="ch2_8_rcore_n_smp.html"><strong aria-hidden="true">3.8.</strong> rCore-N 的多核改造</a></li></ol></li><li class="chapter-item expanded "><a href="ch3_0_user_guide.html"><strong aria-hidden="true">4.</strong> 使用教程</a></li><li class="chapter-item expanded "><a href="ch4_0_test_and_demo.html"><strong aria-hidden="true">5.</strong> 系统测试与演示程序</a></li><li class="chapter-item expanded "><a href="ch5_0_plan_and_progress.html"><strong aria-hidden="true">6.</strong> 开发计划与进展</a></li><li class="chapter-item expanded "><a href="ch6_0_problem_and_solutions.html"><strong aria-hidden="true">7.</strong> 遇到的主要问题和解决方法</a></li><li class="chapter-item expanded "><a href="ch7_0_cooperation.html"><strong aria-hidden="true">8.</strong> 分工与协作</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -676,7 +676,7 @@ struct ProcessorInner {
 <p>目前 rCore-N 中采用一个名为 <code>WAIT_LOCK</code> 的大锁来解决此问题。所有需要获取多个进程锁的函数，都首先尝试获取这个锁，获取不到则自旋等待。以此方式来确保同一时间只有一处需要多个进程的锁，解决死锁问题。</p>
 <h2 id="进程表"><a class="header" href="#进程表">进程表</a></h2>
 <p>为支持通过 <code>pid</code> 寻找对应进程并进行进程间通信等操作，增加了一个 <code>&lt;pid, task&gt;</code> 的映射表。此表在进程创建时增加相应的项，在进程资源回收时先行尝试释放。</p>
-<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="使用方法"><a class="header" href="#使用方法">使用方法</a></h1>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="使用教程"><a class="header" href="#使用教程">使用教程</a></h1>
 <p>克隆仓库：</p>
 <pre><code class="language-sh">git clone https://github.com/Gallium70/rv-n-ext-impl.git
 cd rv-n-ext-impl
@@ -696,8 +696,7 @@ make -j
 编译产生的可执行文件为 qemu-build/riscv64-softmmu/qemu-system-riscv64 。</p>
 <p>调试 PLIC 可修改 <a href="../../qemu/hw/riscv/sifive_plic.c">sifive_plic.c</a> 中 <code>RISCV_DEBUG_PLIC</code> 宏的值为 1，然后在 qemu-build 目录中重新使用 <code>make -j</code> 编译。</p>
 <h3 id="rcore-n"><a class="header" href="#rcore-n">rCore-N</a></h3>
-<p>justfile 中默认将 QEMU 的三个串口映射到了 /dev/pts/24、/dev/pts/25 和 /dev/pts/31，可以在 Linux 中新打开两个终端，执行 <code>tty</code> 指令查看对应的设备路径，替换掉 justfile 中 -serial 后面的参数，并在新终端中执行 <a href="../../rCore-N/sleep.sh">sleep.sh</a> ，确保键盘输入传入了 QEMU 串口而非 shell 的 stdin/stdout 。
-后续可能使用 tmux 重写这一步骤，省去手动配置的过程。</p>
+<p>justfile 中默认将 QEMU 的三个串口映射到了 /dev/pts/24、/dev/pts/25 和 /dev/pts/31，可以在 Linux 中新打开两个终端，执行 <code>tty</code> 指令查看对应的设备路径，替换掉 justfile 中 -serial 后面的参数，并在新终端中执行 <a href="../../rCore-N/sleep.sh">sleep.sh</a> ，确保键盘输入传入了 QEMU 串口而非 shell 的 stdin/stdout 。</p>
 <p>编译、运行：</p>
 <pre><code class="language-sh">git submodule update --init rCore-N
 cd rCore-N/os
@@ -705,6 +704,23 @@ just run
 </code></pre>
 <p>在 <code>just</code> 指令前设置 <code>LOG</code> 环境变量可以指定 rCore-N 的日志等级，如 <code>LOG=DEBUG just run</code> 会将日志等级设为 DEBUG 。</p>
 <p>调试 rCore-N 可使用 <code>just debug</code> ，打开 QEMU 的调试输出使用 <code>just debug_qemu</code> 。</p>
+<h2 id="在-fpga-上运行-rcore-n"><a class="header" href="#在-fpga-上运行-rcore-n">在 FPGA 上运行 rCore-N</a></h2>
+<h3 id="fpga-环境配置"><a class="header" href="#fpga-环境配置">FPGA 环境配置</a></h3>
+<pre><code class="language-sh">git submodule update --init labeled-RISC-V-N
+cd labeled-RISC-V-N
+</code></pre>
+<p>后续步骤请参考<a href="../../labeled-RISC-V-N/fpga/README.html">子模组仓库中相应的教程</a>和<a href="https://github.com/Gallium70/labeled-RISC-V-reproduction-note">标签化 RISC-V 架构复现指南</a> 。</p>
+<p>注意：该仓库初始化时会克隆 chisel 和 firrtl 的源代码并编译，编译时会克隆 riscv-linux（尽管本项目没有用到）和 verilator 源代码，FPGA 的综合和实现会消耗大量的 CPU 和内存资源，请保持耐心，并在开始前保存电脑上的所有工作，以防万一。</p>
+<h3 id="lrv-rust-bl-1"><a class="header" href="#lrv-rust-bl-1">lrv-rust-bl</a></h3>
+<pre><code class="language-sh">git submodule update --init lrv-rust-bl
+cd lrv-rust-bl
+just build
+</code></pre>
+<p>编译好的二进制文件位于 lrv-rust-bl/target/riscv64imac-unknown-none-elf/debug/lrv-rust-bl.bin</p>
+<h3 id="rcore-n-1"><a class="header" href="#rcore-n-1">rCore-N</a></h3>
+<p>修改 <a href="../../rCore-N/user/Makefile">user 文件夹中的 Makefile</a>，将第 14 行的 board_qemu 改为 board_lrv ，然后在 os 文件夹中执行 <code>just build_lrv</code> （或按需设置日志等级），编译好的二进制文件为 rCore-N/os/target/riscv64imac-unknown-none-elf/debug/os.bin 和 rcore-n.bin，二者内容完全一致。</p>
+<h3 id="在-fpga-上运行"><a class="header" href="#在-fpga-上运行">在 FPGA 上运行</a></h3>
+<p>将 lrv-rust-bl.bin 和 rcore-n.bin 复制到 FPGA 的 Arm Linux 中，使用<a href="https://github.com/Gallium70/labeled-RISC-V-boot">标签 RISC-V 启动脚本</a>启动 RISC-V 部分。</p>
 <div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="系统测试与演示程序"><a class="header" href="#系统测试与演示程序">系统测试与演示程序</a></h1>
 <h2 id="用户态中断测试"><a class="header" href="#用户态中断测试">用户态中断测试</a></h2>
 <p>本项目中的 rv-csr-test 子模组是一个基本的 N 扩展寄存器行为测试程序，运行在 S 态，通过软件中断检查中断处理流程、中断委托和 <code>URET</code> 指令能否正常执行。程序需要 SBI 将 S 态和 U 态的中断委托给 S 态，默认入口点为 0x80200000 ，与 rCore-N 和 rustsbi-qemu 中的配置一致。</p>
@@ -837,7 +853,7 @@ pub fn exit_current_and_run_next(exit_code: i32) {
 当进程在硬件线程 1 上领取到 A 外设中断并离开时，内核会在 3 号上下文禁用 A 外设的中断使能，以避免随后在 1 上运行的进程被 A 外设中断；当进程被调度到硬件线程 2 上运行时，内核会在 6 号上下文中启用 A 外设中断。</p>
 <p>PLIC 并不要求领取和完成在同一上下文中，但是只有中断在相应上下文中被使能时，领取和完成才是有效的。如果进程在硬件线程 2 上运行时，仍然向 PLIC 提交 3 号上下文的完成请求，由于此上下文中 A 外设没有被使能，故此次完成无效，A 外设的中断会保持屏蔽状态，进程便再也无法收到该中断。相反，进程向 PLIC 提交 6 号上下文的完成请求是有效的，A 外设中断屏蔽被解除，程序能够继续正常运行。</p>
 <p>因此，用户程序提交完成请求时，应始终使用当前上下文提交；或者在所有上下文中都提交一遍。</p>
-<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><div id="chapter_begin" style="break-before: page; page-break-before: always;"></div>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
