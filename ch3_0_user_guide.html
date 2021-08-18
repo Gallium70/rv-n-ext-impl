@@ -188,7 +188,7 @@ make -j
 编译产生的可执行文件为 qemu-build/riscv64-softmmu/qemu-system-riscv64 。</p>
 <p>调试 PLIC 可修改 <a href="../../qemu/hw/riscv/sifive_plic.c">sifive_plic.c</a> 中 <code>RISCV_DEBUG_PLIC</code> 宏的值为 1，然后在 qemu-build 目录中重新使用 <code>make -j</code> 编译。</p>
 <h3 id="rcore-n"><a class="header" href="#rcore-n">rCore-N</a></h3>
-<p>justfile 中默认将 QEMU 的两个串口映射到了 /dev/pts/1 和 /dev/pts/2 ，可以在 Linux 中新打开两个终端，执行 <code>tty</code> 指令查看对应的设备路径，替换掉 justfile 中 -serial 后面的参数，并在新终端中执行 <a href="../../rCore-N/sleep.sh">sleep.sh</a> ，确保键盘输入传入了 QEMU 串口而非 shell 的 stdin/stdout 。
+<p>justfile 中默认将 QEMU 的三个串口映射到了 /dev/pts/24、/dev/pts/25 和 /dev/pts/31，可以在 Linux 中新打开两个终端，执行 <code>tty</code> 指令查看对应的设备路径，替换掉 justfile 中 -serial 后面的参数，并在新终端中执行 <a href="../../rCore-N/sleep.sh">sleep.sh</a> ，确保键盘输入传入了 QEMU 串口而非 shell 的 stdin/stdout 。
 后续可能使用 tmux 重写这一步骤，省去手动配置的过程。</p>
 <p>编译、运行：</p>
 <pre><code class="language-sh">git submodule update --init rCore-N
