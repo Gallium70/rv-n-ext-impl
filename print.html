@@ -454,10 +454,13 @@ io_uring 测例</li>
 </blockquote>
 <h2 id="qemu-with-extension-n"><a class="header" href="#qemu-with-extension-n">QEMU with extension N</a></h2>
 <p>出于稳定性考虑，我们选择以 <a href="https://github.com/qemu/qemu/tree/stable-5.0">QEMU 的 5.0 稳定分支</a> 为基础，添加用户态中断所需的寄存器和相应的中断处理函数。</p>
+<p><img src="assets/qemu.png" alt="qemu" /></p>
 <ul>
 <li>添加寄存器 <code>ustatus</code> <code>uip</code> <code>uie</code> <code>sideleg</code> <code>sedeleg</code> <code>uepc</code> <code>utvec</code> <code>ucause</code> <code>utval</code> <code>uscratch</code></li>
 <li>添加用户态中断的触发部分：符合条件时使上述处理器进入中断状态</li>
 <li>实现 <code>uret</code> 指令</li>
+<li>修改 PLIC 以支持用户态外部中断</li>
+<li>添加串口用于测试</li>
 </ul>
 <p>一个使用修改后的 QEMU 进行的用户态中断的简单测试结果：</p>
 <p><img src="assets/user_mode_trap_test.png" alt="user mode trap test" /></p>
@@ -550,7 +553,62 @@ io_uring 测例</li>
 <li>通过查看 <code>utval</code> 和 <code>ucause</code> 知道是来自 A 的跨进程信号，进入相应分支处理。</li>
 <li>处理完毕，恢复现场，继续执行 B 进程。</li>
 </ol>
-<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="使用方法"><a class="header" href="#使用方法">使用方法</a></h1>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="rcore-n-的多核改造"><a class="header" href="#rcore-n-的多核改造">rCore-N 的多核改造</a></h1>
+<p>在前文中，我们描述了用户态中断的机制和功能。然而基于单核环境的 rCore-Tutorial v3.5 改造的 rCore-N 并不能发挥出用户态中断的优势，所以我们需要对其进行多核改造。</p>
+<h2 id="多核启动"><a class="header" href="#多核启动">多核启动</a></h2>
+<h3 id="rustsbi-qemu-的多核启动"><a class="header" href="#rustsbi-qemu-的多核启动">rustsbi-qemu 的多核启动</a></h3>
+<p>对于 SMP 架构，多核启动的一种简单方法是先启动核 0，在核 0 完成 OS 的启动后，通过某种方式“唤醒”其余的核。在 rustsbi-qemu 中，所有核在上电后都直接启动，执行到 <code>rust_main</code> 中的 <code>mp_hook</code> 函数。在 <code>mp_hook</code> 中，编号非 0 的核都会陷入循环，等待“M 态软件中断”来跳出循环，执行 sbi 层的初始化配置后跳转 OS。</p>
+<h3 id="rcore-n-的多核启动"><a class="header" href="#rcore-n-的多核启动">rCore-N 的多核启动</a></h3>
+<h4 id="启动栈"><a class="header" href="#启动栈">启动栈</a></h4>
+<p>sbi 层完成配置后，首先进入一段汇编进行启动栈的配置，再跳转 rust 编写的内核初始化函数 <code>rust_main</code>。我们使用 4 核的 SMP 架构，每个核有 64KiB 的启动栈，即在 <code>.bss.stack</code> 段共有 256KiB 的空间用于 OS 的启动。此段根据核的 id，地址从低到高进行分配。</p>
+<h4 id="初始化"><a class="header" href="#初始化">初始化</a></h4>
+<p>OS 的初始化分为三个部分：核 0 进行整体的初始化、唤醒其他核、其他核自身的初始化。</p>
+<p>整体初始化阶段，OS 需要初始化内存、PLIC 和共用的串口外设。在完成初始化后，核 0 通过调用 sbi 提供的接口，向另外三个核发送 IPI，通过 SBI 转为 M 态软件中断来唤醒它们。</p>
+<p>其他核被唤醒后，进入相同的内核初始化函数，并根据其 id 进入核自身的初始化部分，设置自己的寄存器并配置对应自己的 PLIC 上下文。</p>
+<p>简略的内核初始化函数如下：</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn rust_main(hart_id: usize) -&gt; ! {
+    if hart_id == 0 {
+        // 全局初始化 核0初始化
+
+        // 唤醒其他核
+        for i in 1..CPU_NUM {
+            let mask: usize = 1 &lt;&lt; i;
+            send_ipi(&amp;mask as *const _ as usize);
+        }
+    } else {
+        // 其他核初始化
+    }
+    // 开始运行
+}
+<span class="boring">}
+</span></code></pre></pre>
+<h2 id="进程调度"><a class="header" href="#进程调度">进程调度</a></h2>
+<h3 id="调度队列"><a class="header" href="#调度队列">调度队列</a></h3>
+<p>出于实现和维护的简易性与简单使用场景的考虑，我们采用了单队列调度的方式。所有核共用一个“进程池”，其中只有一个进程调度队列；每个核有一个自己正持有并运行的进程。</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct TaskPool {
+    pub scheduler: TaskManager, // 共享的调度队列
+    ...
+}
+
+struct ProcessorInner {
+    current: Option&lt;Arc&lt;TaskControlBlock&gt;&gt;, // 该核持有的进程
+    ...
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>内核开始运行后，进入一个死循环，不断尝试从共享的调度队列中取出一个进程开始运行，如果没有取出则进入下一次循环。即多核不断抢同一个队列中的资源，进程可能频繁地在核之间轮转，因而会有亲和性的问题发生。但在进程数恰为核数时，进程几乎与核绑定，便可以避免不亲和的问题。</p>
+<h3 id="死锁问题"><a class="header" href="#死锁问题">死锁问题</a></h3>
+<p>在进程退出时，需要将属于自己的子进程交付不会退出的 0 号进程 <code>initproc</code> 来避免资源浪费。这要求同时持有进程自身和 <code>initproc</code> 的锁，在多核情境下会与 <code>waitpid</code> 等需要进程锁的函数发生冲突，甚至产生死锁。</p>
+<p>目前 rCore-N 中采用一个名为 <code>WAIT_LOCK</code> 的大锁来解决此问题。所有需要获取多个进程锁的函数，都首先尝试获取这个锁，获取不到则自旋等待。以此方式来确保同一时间只有一处需要多个进程的锁，解决死锁问题。</p>
+<h2 id="进程表"><a class="header" href="#进程表">进程表</a></h2>
+<p>为支持通过 <code>pid</code> 寻找对应进程并进行进程间通信等操作，增加了一个 <code>&lt;pid, task&gt;</code> 的映射表。此表在进程创建时增加相应的项，在进程资源回收时先行尝试释放。</p>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="使用方法"><a class="header" href="#使用方法">使用方法</a></h1>
 <p>克隆仓库：</p>
 <pre><code class="language-sh">git clone https://github.com/Gallium70/rv-n-ext-impl.git
 cd rv-n-ext-impl
