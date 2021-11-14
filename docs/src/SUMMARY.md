@@ -11,6 +11,7 @@
   - [内核对用户态中断的管理](ch2_6_user_trap_management.md)
   - [用户态中断扩展的使用](ch2_7_user_trap_usage.md)
   - [rCore-N 的多核改造](ch2_8_rcore_n_smp.md)
+  - [用户态跨核中断控制器方案设计](ch2_9_uipi.md)
 - [使用教程](ch3_0_user_guide.md)
 - [系统测试与演示程序](ch4_0_test_and_demo.md)
 - [开发计划与进展](ch5_0_plan_and_progress.md)
