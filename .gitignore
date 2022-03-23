@@ -2,3 +2,5 @@
 qemu-build/*
 !qemu-build/README.md
 .vscode
+.metals
+.scalafmt.conf
