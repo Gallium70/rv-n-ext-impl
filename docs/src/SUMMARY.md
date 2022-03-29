@@ -13,6 +13,7 @@
   - [rCore-N 的多核改造](ch2_8_rcore_n_smp.md)
 - [使用教程](ch3_0_user_guide.md)
 - [系统测试与演示程序](ch4_0_test_and_demo.md)
+  - [基于用户态外部中断的驱动性能分析](ch4_1_uei_analysis.md)
 - [开发计划与进展](ch5_0_plan_and_progress.md)
 - [遇到的主要问题和解决方法](ch6_0_problem_and_solutions.md)
 - [分工与协作](ch7_0_cooperation.md)
