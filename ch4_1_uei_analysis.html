@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>启动器与 SBI - Risc-V Extension N Implementation</title>
+        <title>基于用户态外部中断的驱动性能分析 - Risc-V Extension N Implementation</title>
         
         
 
@@ -98,7 +98,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> 简介</a></li><li class="chapter-item expanded "><a href="ch1_0_background.html"><strong aria-hidden="true">2.</strong> 项目背景与现有工作</a></li><li class="chapter-item expanded "><a href="ch2_0_design.html"><strong aria-hidden="true">3.</strong> 系统设计</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch2_1_n_ext_spec.html"><strong aria-hidden="true">3.1.</strong> N 扩展规范草案</a></li><li class="chapter-item expanded "><a href="ch2_2_user_trap_handle_flow.html"><strong aria-hidden="true">3.2.</strong> 用户态中断的处理流程</a></li><li class="chapter-item expanded "><a href="ch2_3_external_interrupt_and_plic.html"><strong aria-hidden="true">3.3.</strong> 外部中断与 PLIC</a></li><li class="chapter-item expanded "><a href="ch2_4_n_ext_on_qemu_and_fpga.html"><strong aria-hidden="true">3.4.</strong> QEMU 和 FPGA 中的 N 扩展支持</a></li><li class="chapter-item expanded "><a href="ch2_5_bootloader.html" class="active"><strong aria-hidden="true">3.5.</strong> 启动器与 SBI</a></li><li class="chapter-item expanded "><a href="ch2_6_user_trap_management.html"><strong aria-hidden="true">3.6.</strong> 内核对用户态中断的管理</a></li><li class="chapter-item expanded "><a href="ch2_7_user_trap_usage.html"><strong aria-hidden="true">3.7.</strong> 用户态中断扩展的使用</a></li><li class="chapter-item expanded "><a href="ch2_8_rcore_n_smp.html"><strong aria-hidden="true">3.8.</strong> rCore-N 的多核改造</a></li></ol></li><li class="chapter-item expanded "><a href="ch3_0_user_guide.html"><strong aria-hidden="true">4.</strong> 使用教程</a></li><li class="chapter-item expanded "><a href="ch4_0_test_and_demo.html"><strong aria-hidden="true">5.</strong> 系统测试与演示程序</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch4_1_uei_analysis.html"><strong aria-hidden="true">5.1.</strong> 基于用户态外部中断的驱动性能分析</a></li></ol></li><li class="chapter-item expanded "><a href="ch5_0_plan_and_progress.html"><strong aria-hidden="true">6.</strong> 开发计划与进展</a></li><li class="chapter-item expanded "><a href="ch6_0_problem_and_solutions.html"><strong aria-hidden="true">7.</strong> 遇到的主要问题和解决方法</a></li><li class="chapter-item expanded "><a href="ch7_0_cooperation.html"><strong aria-hidden="true">8.</strong> 分工与协作</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> 简介</a></li><li class="chapter-item expanded "><a href="ch1_0_background.html"><strong aria-hidden="true">2.</strong> 项目背景与现有工作</a></li><li class="chapter-item expanded "><a href="ch2_0_design.html"><strong aria-hidden="true">3.</strong> 系统设计</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch2_1_n_ext_spec.html"><strong aria-hidden="true">3.1.</strong> N 扩展规范草案</a></li><li class="chapter-item expanded "><a href="ch2_2_user_trap_handle_flow.html"><strong aria-hidden="true">3.2.</strong> 用户态中断的处理流程</a></li><li class="chapter-item expanded "><a href="ch2_3_external_interrupt_and_plic.html"><strong aria-hidden="true">3.3.</strong> 外部中断与 PLIC</a></li><li class="chapter-item expanded "><a href="ch2_4_n_ext_on_qemu_and_fpga.html"><strong aria-hidden="true">3.4.</strong> QEMU 和 FPGA 中的 N 扩展支持</a></li><li class="chapter-item expanded "><a href="ch2_5_bootloader.html"><strong aria-hidden="true">3.5.</strong> 启动器与 SBI</a></li><li class="chapter-item expanded "><a href="ch2_6_user_trap_management.html"><strong aria-hidden="true">3.6.</strong> 内核对用户态中断的管理</a></li><li class="chapter-item expanded "><a href="ch2_7_user_trap_usage.html"><strong aria-hidden="true">3.7.</strong> 用户态中断扩展的使用</a></li><li class="chapter-item expanded "><a href="ch2_8_rcore_n_smp.html"><strong aria-hidden="true">3.8.</strong> rCore-N 的多核改造</a></li></ol></li><li class="chapter-item expanded "><a href="ch3_0_user_guide.html"><strong aria-hidden="true">4.</strong> 使用教程</a></li><li class="chapter-item expanded "><a href="ch4_0_test_and_demo.html"><strong aria-hidden="true">5.</strong> 系统测试与演示程序</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch4_1_uei_analysis.html" class="active"><strong aria-hidden="true">5.1.</strong> 基于用户态外部中断的驱动性能分析</a></li></ol></li><li class="chapter-item expanded "><a href="ch5_0_plan_and_progress.html"><strong aria-hidden="true">6.</strong> 开发计划与进展</a></li><li class="chapter-item expanded "><a href="ch6_0_problem_and_solutions.html"><strong aria-hidden="true">7.</strong> 遇到的主要问题和解决方法</a></li><li class="chapter-item expanded "><a href="ch7_0_cooperation.html"><strong aria-hidden="true">8.</strong> 分工与协作</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -168,30 +168,42 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="启动器与-sbi"><a class="header" href="#启动器与-sbi">启动器与 SBI</a></h1>
-<p>我们基于 rustsbi 实现 QEMU 模拟器和 FPGA 上 OS 的启动与 sbi 层。</p>
-<h2 id="rustsbi-qemu"><a class="header" href="#rustsbi-qemu">rustsbi-qemu</a></h2>
-<p>我们基于 <code>rustsbi/rustsbi-qemu</code>，放开了对地址的保护，并添加了暂被 rustsbi 组织移除的多核支持以及中断委托。项目位于 <a href="https://github.com/duskmoon314/rustsbi-qemu/tree/legacy-multicore"><code>duskmoon314/rustsbi-qemu:legacy-multicore</code></a>。</p>
-<h3 id="地址保护"><a class="header" href="#地址保护">地址保护</a></h3>
-<p>在 RISC-V 中，有用于保护物理地址的寄存器 <code>pmpcfg</code> 和 <code>pmpaddr</code>。原本 rustsbi-qemu 只允许 sbi 部分和 OS 所在的地址空间可以使用，而并未允许 PLIC、串口等设备所在的物理地址。出于调试方便，我们放开了所有物理地址。</p>
-<h3 id="中断委托"><a class="header" href="#中断委托">中断委托</a></h3>
-<p>在修改后的 rustsbi-qemu 中，用户态的三种中断皆被 sbi 委托给 S 态的 OS，由 OS 决定如何处理。</p>
-<h3 id="多核启动"><a class="header" href="#多核启动">多核启动</a></h3>
-<p>最新版的 rustsbi-qemu 正在逐步支持 RISC-V sbi 标准的 hsm 扩展，因而移除了之前的多核启动方案。我们重新支持了多核启动，通过使用 <code>wfi</code> 指令，将核 0 以外的核卡在一个循环中，直到一个 M 态软件中断来让其余核跳出循环，进入 sbi 和 os 的设置与运行。</p>
-<h2 id="lrv-rust-bl"><a class="header" href="#lrv-rust-bl">lrv-rust-bl</a></h2>
+                        <h1 id="基于用户态外部中断的驱动性能分析"><a class="header" href="#基于用户态外部中断的驱动性能分析">基于用户态外部中断的驱动性能分析</a></h1>
+<h2 id="测试环境"><a class="header" href="#测试环境">测试环境</a></h2>
+<p>硬件平台：4x Rocket Core @ 100MHz, 2MB L2 Cache, 16MB DRAM
+外设：2x AXI UART 16550 @ 6.25M baudrate</p>
+<h2 id="吞吐率"><a class="header" href="#吞吐率">吞吐率</a></h2>
+<p>串口配置为 8 比特字长，无校验位， 1 停止位，理论吞吐率为 625KB/s 。</p>
+<table><thead><tr><th>测试场景</th><th>内核，中断</th><th>用户，轮询</th><th>用户，中断</th></tr></thead><tbody>
+<tr><td>裸机，无哈希</td><td>396</td><td>542</td><td>438</td></tr>
+<tr><td>裸机，有哈希</td><td>123</td><td>189</td><td>136</td></tr>
+<tr><td>rCore-N，有哈希</td><td>78</td><td>410</td><td>260</td></tr>
+<tr><td>rCore-N，有哈希</td><td>55</td><td>152</td><td>123</td></tr>
+</tbody></table>
+<p>“有哈希”指每次发送或接收时均进行一次 blake3 Hasher::update() 计算，用来模拟计算和 IO 混合负载。表中数据单位为 KB/s 。</p>
+<p>可见用户态轮询模式驱动性能最高，在裸机场景下可以接近理论上限；用户态中断性能次之，内核态的中断模式驱动性能最低。</p>
+<h2 id="驱动延时追踪"><a class="header" href="#驱动延时追踪">驱动延时追踪</a></h2>
+<p>read 系统调用：</p>
+<p><img src="assets/trace/read.svg" alt="read" /></p>
+<p>write 系统调用：</p>
+<p><img src="assets/trace/write.svg" alt="write" /></p>
+<p>内核态中断：</p>
+<p><img src="assets/trace/sei.svg" alt="sei" /></p>
+<p>用户态中断：</p>
+<p><img src="assets/trace/uei.svg" alt="uei" /></p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="ch2_4_n_ext_on_qemu_and_fpga.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="ch4_0_test_and_demo.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
                         
-                            <a rel="next" href="ch2_6_user_trap_management.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="ch5_0_plan_and_progress.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -203,13 +215,13 @@
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a rel="prev" href="ch2_4_n_ext_on_qemu_and_fpga.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="ch4_0_test_and_demo.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a rel="next" href="ch2_6_user_trap_management.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="ch5_0_plan_and_progress.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 
