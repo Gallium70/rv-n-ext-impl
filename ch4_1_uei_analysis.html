@@ -185,12 +185,19 @@
 <h2 id="驱动延时追踪"><a class="header" href="#驱动延时追踪">驱动延时追踪</a></h2>
 <p>read 系统调用：</p>
 <p><img src="assets/trace/read.svg" alt="read" /></p>
+<p>可见在 14000 和 26000 附近出现了两个峰。</p>
 <p>write 系统调用：</p>
 <p><img src="assets/trace/write.svg" alt="write" /></p>
+<p>耗时集中在 40000 个周期附近。</p>
+<p>作为对照，get_time 调用的耗时情况如下：</p>
+<p><img src="assets/trace/gettime.svg" alt="gt" /></p>
+<p>get_time 的逻辑较为简单，可以认为是一次系统调用的“背景”耗时，集中在 14000 个周期附近。read 调用的一个峰基本与背景延时重合，推测为缓冲区中恰有数据的情况，而 26000 对应的峰推测为缓冲区中无数据而需要等待串口传输的情况。</p>
 <p>内核态中断：</p>
 <p><img src="assets/trace/sei.svg" alt="sei" /></p>
+<p>一个峰出现在 2500 周期附近且较集中，另一个峰出现在 10000 周期左右，且散布较宽。</p>
 <p>用户态中断：</p>
 <p><img src="assets/trace/uei.svg" alt="uei" /></p>
+<p>用户态中断驱动一个峰出现在 1800 周期附近，另一个在 4600 附近，整体周期数大幅低于内核态中断驱动，且分布更集中，波动较小。</p>
 
                     </main>
 
