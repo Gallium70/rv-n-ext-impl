@@ -1,0 +1,551 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>软件中断与 UINTC - Risc-V Extension N Implementation</title>
+        
+        
+
+
+        <!-- Custom HTML head -->
+        
+
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        
+        <link rel="icon" href="favicon.svg">
+        
+        
+        <link rel="shortcut icon" href="favicon.png">
+        
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        
+        <link rel="stylesheet" href="css/print.css" media="print">
+        
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        
+        <link rel="stylesheet" href="fonts/fonts.css">
+        
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="intro.html">简介</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">1.</strong> 项目背景与相关工作</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch1_1_priv_and_trap.html"><strong aria-hidden="true">1.1.</strong> 特权级与陷入</a></li><li class="chapter-item expanded "><a href="ch1_2_driver_and_ipc.html"><strong aria-hidden="true">1.2.</strong> 驱动与进程间通信</a></li><li class="chapter-item expanded "><a href="ch1_3_x86_uintr.html"><strong aria-hidden="true">1.3.</strong> x86 用户态中断</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">2.</strong> 系统设计</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch2_1_n_ext_spec.html"><strong aria-hidden="true">2.1.</strong> N 扩展规范草案</a></li><li class="chapter-item expanded "><a href="ch2_2_user_trap_handle_flow.html"><strong aria-hidden="true">2.2.</strong> 用户态中断的处理流程</a></li><li class="chapter-item expanded "><a href="ch2_3_external_interrupt_and_plic.html"><strong aria-hidden="true">2.3.</strong> 外部中断与 PLIC</a></li><li class="chapter-item expanded "><a href="ch2_4_software_interrupt_and_uintc.html" class="active"><strong aria-hidden="true">2.4.</strong> 软件中断与 UINTC</a></li><li class="chapter-item expanded "><a href="ch2_5_user_trap_management.html"><strong aria-hidden="true">2.5.</strong> 内核对用户态中断的管理</a></li><li class="chapter-item expanded "><a href="ch2_6_user_trap_usage.html"><strong aria-hidden="true">2.6.</strong> 用户态中断扩展的使用</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.</strong> 系统实现</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch3_1_n_ext_on_qemu_and_fpga.html"><strong aria-hidden="true">3.1.</strong> 硬件与模拟器</a></li><li class="chapter-item expanded "><a href="ch3_2_bootloader.html"><strong aria-hidden="true">3.2.</strong> 启动器与 SBI</a></li><li class="chapter-item expanded "><a href="ch3_3_rcore_n_smp.html"><strong aria-hidden="true">3.3.</strong> rCore-N 的多核改造</a></li></ol></li><li class="chapter-item expanded "><a href="ch4_0_test_and_demo.html"><strong aria-hidden="true">4.</strong> 系统测试与演示程序</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch4_1_uei_analysis.html"><strong aria-hidden="true">4.1.</strong> 基于用户态外部中断的驱动性能分析</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.</strong> 项目记录</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch5_0_plan_and_progress.html"><strong aria-hidden="true">5.1.</strong> 开发计划与进展</a></li><li class="chapter-item expanded "><a href="ch5_1_problem_and_solutions.html"><strong aria-hidden="true">5.2.</strong> 遇到的主要问题和解决方法</a></li></ol></li><li class="chapter-item expanded "><a href="ch6_0_user_guide.html"><strong aria-hidden="true">6.</strong> 使用教程</a></li><li class="chapter-item expanded "><a href="ch7_0_cooperation.html"><strong aria-hidden="true">7.</strong> 分工与协作</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        
+                    </div>
+
+                    <h1 class="menu-title">Risc-V Extension N Implementation</h1>
+
+                    <div class="right-buttons">
+                        
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        
+                        
+                        
+
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="uintc-跨核中断控制器设计"><a class="header" href="#uintc-跨核中断控制器设计">UINTC 跨核中断控制器设计</a></h1>
+<p>本节描述用于直接发送用户态跨核软件中断的中断控制器。</p>
+<p>若不加说明，下文中中断均默认指用户态跨核软件中断。</p>
+<h2 id="动机与设计思路"><a class="header" href="#动机与设计思路">动机与设计思路</a></h2>
+<p>用户态跨核中断有这样的特点：</p>
+<ul>
+<li>收发用户态中断的用户进程数量不固定，可能远多于硬件线程数量</li>
+<li>用户进程不能保证占有某个硬件线程，不能保证时刻在运行</li>
+<li>用户进程间的中断收发不能任意进行，需要预先取得许可</li>
+</ul>
+<p>因此区别于传统的中断控制器，中断的来源和目的由硬件固定，用户态跨核中断控制器只能承载发送方和接收方之间连接的功能，发送方、接收方在中断控制器上的硬件槽位和用户进程之间的绑定需要能够由操作系统动态控制。</p>
+<p>完成绑定后，发送跨核中断时，发送方进程仅需在运行时提出请求即可；但接收中断需要中断能够在接收方运行时正确到达接收方运行的硬件线程，接收方所在的硬件线程不固定，所以可以将发送跨核中断涉及的主体分为发送方、接收方和硬件线程三部分。</p>
+<ul>
+<li>发送方和接收方够成二分图，一对发送方和接收方之间连边，表示此发送方可以向此接收方发送中断。此二分图会由操作系统映射到中断控制器上，实现不需经过内核的快速收发。如果图超出了中断控制器的容量，操作系统可以只映射一个子图，未映射部分可能需要操作系统软件模拟。这是此中断控制器的核心部分。</li>
+<li>每个硬件线程则取决于正在执行的用户进程，同时会监听至多一个接收方，发给该接收方的中断会到达该硬件线程。暂时没有支持一个硬件线程监听多个接收方的考虑，所以此部分相对较简单。</li>
+</ul>
+<p>图有邻接矩阵和邻接表等常见的表示方式。本节描述的中断控制器设计采用邻接矩阵，用发送方数 × 接收方数的二进制位矩阵 <code>enable</code> 表示每对发送方和接收方之间是否连边。每对连边的发送方和接收方之间可以发送中断。同时，另一个二进制位矩阵 <code>pending</code> 表示每对发送方和接收方之间是否有已发送而待处理的中断。如果某接收方对应的矩阵一行有 <code>pending</code> 的中断，而某硬件线程在监听此接收方，该硬件线程的 <code>uip.USIP</code> 会被置 <code>1</code>，从而达到当发送方用户进程和接收方用户进程都在运行时，中断可以直接由发送方在用户态发送给接收方的效果；当接收方用户进程不在运行时，已发送中断会在矩阵中等待。</p>
+<p>中断控制器采用内存映射的接口。通过将暴露给用户进程的寄存器地址分页，操作系统可以将每个发送方和接收方槽位独立映射给拥有权限的用户进程。</p>
+<p>下面具体介绍中断控制器 UINTC 的设计方案。</p>
+<h2 id="简介"><a class="header" href="#简介">简介</a></h2>
+<p>UINTC 提供若干数量的发送方和接收方槽位，以及若干上下文。</p>
+<p>发送方和接收方可动态对应用户进程，从 1 开始依次编号，编号 0 保留。在下文中，我们设 S 为包括保留的 0 号在内的发送方数量，R 为包括保留的 0 号在内的接收方数量，这样发送方的编号为 1 到 S-1，接收方的编号为 1 到 R-1。每个发送方和接收方记录一个用户态中断 ID，称为 UIID（User Interrupt ID）。UIID 用来标识使用此发送方或接收方的用户进程。UIID 和操作系统内的进程 ID 不必相同，发送方和接收方的 UIID 可以分别分配。</p>
+<p>每个上下文对应一个硬件线程，从 0 开始依次编号。上下文的编号可以与对应硬件线程的 Hart ID（<code>mhartid</code>）相同或不同。在下文中，我们设 N 为上下文数量，这样上下文编号的范围为 0 到 N-1。上下文和硬件线程的对应由实现决定。</p>
+<p>规定 R、S 不超过 4096，N 不超过 2048。</p>
+<p>下面简要介绍 UINTC 提供的寄存器。若不加特殊说明，下文所有寄存器均为 32 位，在内存中占 4 字节。不同寄存器读写时实际有意义的位数可能各异。</p>
+<p>对于每对发送方和接收方，UINTC 提供以下寄存器用于中断整体管理：</p>
+<ul>
+<li>
+<p><strong>使能寄存器 enable</strong></p>
+<p>一位，记录发送方是否可以向接收方发送中断。</p>
+<p>此寄存器意指由操作系统读写。</p>
+<p>下用 <code>enable[s][r]</code> 表示发送方 <code>s</code> 发送中断给接收方 <code>r</code> 的使能，<code>1</code> 表示允许发送，<code>0</code> 表示禁止发送。</p>
+<p>为了操作便捷，使能寄存器在内存映射中压位，并可以分别根据发送方或接收方编号连续访问。对于每个发送方，连续 32 个接收方的使能会占一个 4 对齐的内存地址，此地址的每一位分别表示一个接收方的使能寄存器值。对于每个接收方，连续 32 个发送方给的使能会占一个 4 对齐的内存地址，此地址的每一位分别表示一个发送方的使能寄存器值。</p>
+<blockquote>
+<p>可以行列随机访问的二维矩阵对 FPGA 不太友好。如果发送方和接收方更替不太频繁，可以考虑只允许一维随机访问，那样更改用户进程和硬件槽位绑定时时间可能相对较长。</p>
+</blockquote>
+</li>
+<li>
+<p><strong>等待寄存器 pending</strong></p>
+<p>一位，记录发送方是否已向接收方发送中断，此中断尚未被接收方领取。</p>
+<p>下用 <code>pending[s][r]</code> 表示是否有 <code>s</code> 向 <code>r</code> 发送的正在等待的中断，<code>1</code> 表示有<code>0</code> 表示没有。</p>
+<p>等待寄存器也以类似使能寄存器的方式压位访问。</p>
+</li>
+</ul>
+<p>对于每个发送方，UINTC 提供以下寄存器用于发送和发送管理：</p>
+<ul>
+<li>
+<p><strong>发送方 UIID 寄存器 sender_uiid</strong></p>
+<p>用于记录发送方对应的 UIID。</p>
+<p>此寄存器意指由操作系统维护。</p>
+<p>下用 <code>sender_uiid[s]</code> 表示发送方 <code>s</code> 对应的发送方 UIID 寄存器。</p>
+</li>
+<li>
+<p><strong>发送寄存器 send</strong></p>
+<p>向此寄存器写入接收方的 UIID 以请求向后者发送用户态中断。</p>
+<p>下用 <code>send[s]</code> 表示发送方 <code>s</code> 对应的发送寄存器。</p>
+</li>
+<li>
+<p><strong>发送状态寄存器 status</strong></p>
+<p>从此寄存器读取检查上一次发送是否成功。</p>
+<p>下用 <code>status[s]</code> 表示发送方 <code>s</code> 对应的发送状态寄存器。</p>
+<blockquote>
+<p>此寄存器主要用于在发送方、接收方较多时，如果一个中断接收方未绑定硬件槽位，发送方可以知情。</p>
+</blockquote>
+</li>
+</ul>
+<p>对于每个接收方，UINTC 提供以下寄存器用于接收和接收管理：</p>
+<ul>
+<li>
+<p><strong>接收方 UIID 寄存器 receiver_uiid</strong></p>
+<p>用于记录接收方对应的 UIID。</p>
+<p>此寄存器意指由操作系统维护。</p>
+<p>下用 <code>receiver_uiid[r]</code> 表示接收方 <code>r</code> 对应的接收方 UIID 寄存器。</p>
+</li>
+<li>
+<p><strong>领取寄存器 claim</strong></p>
+<p>读取此寄存器可以得到发送给此硬件线程的中断发送方 UIID 之一。读取到的发送方硬件线程发送的中断被领取。</p>
+<blockquote>
+<p>RISC-V 中，用户态软件中断仅有一个信号，所以需要这样的机制来得知中断的具体来源。此机制来源于 PLIC。</p>
+</blockquote>
+</li>
+</ul>
+<p>对于每个上下文，UINTC 提供以下寄存器用于监听中断：</p>
+<ul>
+<li>
+<p><strong>监听寄存器 listen</strong></p>
+<p>用于记录此上下文监听的接收方编号（非 UIID）。</p>
+<p>此寄存器意指由操作系统在用户进程调度时维护，从而让运行用户进程的硬件线程接收到对应的中断。</p>
+<p>下用 <code>listen[c]</code> 表时上下文 <code>c</code> 对应的监听寄存器。</p>
+</li>
+</ul>
+<p>上述寄存器读写的详细效果见下文。</p>
+<h2 id="内存映射"><a class="header" href="#内存映射">内存映射</a></h2>
+<p>中断控制器采用内存映射，其基址由实现定义。各寄存器相对于基址的偏移见下。</p>
+<blockquote>
+<p>0x0000000 - 0x0001FFC 的前两个 4 KiB 页是每个上下文的监听寄存器，意指由操作系统管理。
+0x0002000 - 0x1FFFFFC 的部分每连续两个 4 KiB 页属于一个发送方。其中第一页包括<strong>发送寄存器 send</strong> 和<strong>发送状态寄存器 status</strong>，意指让操作系统映射给拥有此发送方的用户进程。第二页包括<strong>发送方 UIID 寄存器 sender_uiid</strong> 等其余寄存器，意指由操作系统管理。
+0x2002000 - 0x3FFFFFC 的部分每连续两个 4 KiB 页属于一个接收方。其中第一页包括<strong>领取寄存器 claim</strong>，意指让操作系统映射给拥有此接收方的用户进程。第二页包括<strong>接收方 UIID 寄存器 receiver_uiid</strong> 等其余寄存器，意指由操作系统管理。</p>
+</blockquote>
+<p>监听寄存器部分：</p>
+<table><thead><tr><th>偏移</th><th>寄存器描述</th></tr></thead><tbody>
+<tr><td>0x0000000</td><td><strong>监听寄存器 listen</strong>，上下文 0</td></tr>
+<tr><td>0x0000004</td><td><strong>监听寄存器 listen</strong>，上下文 1</td></tr>
+<tr><td>...</td><td>...</td></tr>
+<tr><td>0x0001FFC</td><td><strong>监听寄存器 listen</strong>，上下文 2047</td></tr>
+</tbody></table>
+<p>发送方部分：</p>
+<table><thead><tr><th>偏移</th><th>寄存器描述</th></tr></thead><tbody>
+<tr><td>0x0002000</td><td>1 号发送方的<strong>发送寄存器 send / 发送状态寄存器 status</strong></td></tr>
+<tr><td>0x0002004 - 0x0002FFC</td><td>保留</td></tr>
+<tr><td>0x0003000</td><td>1 号发送方的<strong>发送方 UIID 寄存器 sender_uiid</strong></td></tr>
+<tr><td>0x0003004 - 0x00037FC</td><td>保留</td></tr>
+<tr><td>0x0003800</td><td>1 号发送方的<strong>使能寄存器 enable</strong>，接收方 0 - 31</td></tr>
+<tr><td>0x0003804</td><td>1 号发送方的<strong>使能寄存器 enable</strong>，接收方 32 - 63</td></tr>
+<tr><td>...</td><td>...</td></tr>
+<tr><td>0x00039FC</td><td>1 号发送方的<strong>等待寄存器 pending</strong>，接收方 4064 - 4095</td></tr>
+<tr><td>0x0003A00</td><td>1 号发送方的<strong>等待寄存器 pending</strong>，接收方 0 - 31</td></tr>
+<tr><td>0x0003A04</td><td>1 号发送方的<strong>等待寄存器 pending</strong>，接收方 32 - 63</td></tr>
+<tr><td>...</td><td>...</td></tr>
+<tr><td>0x0003BFC</td><td>1 号发送方的<strong>等待寄存器 pending</strong>，接收方 4064 - 4095</td></tr>
+<tr><td>0x0004000</td><td>2 号发送方的<strong>发送寄存器 send / 发送状态寄存器 status</strong></td></tr>
+<tr><td>0x0004004 - 0x0004FFC</td><td>保留</td></tr>
+<tr><td>0x0005000</td><td>2 号发送方的<strong>发送方 UIID 寄存器 sender_uiid</strong></td></tr>
+<tr><td>0x0005004 - 0x00057FC</td><td>保留</td></tr>
+<tr><td>0x0005800</td><td>2 号发送方的<strong>使能寄存器 enable</strong>，接收方 0 - 31</td></tr>
+<tr><td>0x0005804</td><td>2 号发送方的<strong>使能寄存器 enable</strong>，接收方 32 - 63</td></tr>
+<tr><td>...</td><td>...</td></tr>
+<tr><td>0x00059FC</td><td>2 号发送方的<strong>等待寄存器 pending</strong>，接收方 4064 - 4095</td></tr>
+<tr><td>0x0005A00</td><td>2 号发送方的<strong>等待寄存器 pending</strong>，接收方 0 - 31</td></tr>
+<tr><td>0x0005A04</td><td>2 号发送方的<strong>等待寄存器 pending</strong>，接收方 32 - 63</td></tr>
+<tr><td>...</td><td>...</td></tr>
+<tr><td>0x0005BFC</td><td>2 号发送方的<strong>等待寄存器 pending</strong>，接收方 4064 - 4095</td></tr>
+<tr><td>...</td><td>...</td></tr>
+<tr><td>...</td><td>...</td></tr>
+<tr><td>0x1FFE000</td><td>4095 号发送方的<strong>发送寄存器 send / 发送状态寄存器 status</strong></td></tr>
+<tr><td>0x1FFE004 - 0x1FFEFFC</td><td>保留</td></tr>
+<tr><td>0x1FFF000</td><td>4095 号发送方的<strong>发送方 UIID 寄存器 sender_uiid</strong></td></tr>
+<tr><td>0x1FFF004 - 0x1FFF7FC</td><td>保留</td></tr>
+<tr><td>0x1FFF800</td><td>4095 号发送方的<strong>使能寄存器 enable</strong>，接收方 0 - 31</td></tr>
+<tr><td>0x1FFF804</td><td>4095 号发送方的<strong>使能寄存器 enable</strong>，接收方 32 - 63</td></tr>
+<tr><td>...</td><td>...</td></tr>
+<tr><td>0x1FFF9FC</td><td>4095 号发送方的<strong>等待寄存器 pending</strong>，接收方 4064 - 4095</td></tr>
+<tr><td>0x1FFFA00</td><td>4095 号发送方的<strong>等待寄存器 pending</strong>，接收方 0 - 31</td></tr>
+<tr><td>0x1FFFA04</td><td>4095 号发送方的<strong>等待寄存器 pending</strong>，接收方 32 - 63</td></tr>
+<tr><td>...</td><td>...</td></tr>
+<tr><td>0x1FFFBFC</td><td>4095 号发送方的<strong>等待寄存器 pending</strong>，接收方 4064 - 4095</td></tr>
+</tbody></table>
+<p>中间保留部分：</p>
+<table><thead><tr><th>偏移</th><th>寄存器描述</th></tr></thead><tbody>
+<tr><td>0x2000000 - 0x2001FFC</td><td>保留</td></tr>
+</tbody></table>
+<p>接收方部分：</p>
+<table><thead><tr><th>偏移</th><th>寄存器描述</th></tr></thead><tbody>
+<tr><td>0x2002000</td><td>1 号接收方的<strong>领取寄存器 claim</strong></td></tr>
+<tr><td>0x2002004 - 0x2002FFC</td><td>保留</td></tr>
+<tr><td>0x2003000</td><td>1 号接收方的<strong>接收方 UIID 寄存器 receiver_uiid</strong></td></tr>
+<tr><td>0x2003004 - 0x20037FC</td><td>保留</td></tr>
+<tr><td>0x2003800</td><td>1 号接收方的<strong>使能寄存器 enable</strong>，发送方 0 - 31</td></tr>
+<tr><td>0x2003804</td><td>1 号接收方的<strong>使能寄存器 enable</strong>，发送方 32 - 63</td></tr>
+<tr><td>...</td><td>...</td></tr>
+<tr><td>0x20039FC</td><td>1 号接收方的<strong>等待寄存器 pending</strong>，发送方 4064 - 4095</td></tr>
+<tr><td>0x2003A00</td><td>1 号接收方的<strong>等待寄存器 pending</strong>，发送方 0 - 31</td></tr>
+<tr><td>0x2003A04</td><td>1 号接收方的<strong>等待寄存器 pending</strong>，发送方 32 - 63</td></tr>
+<tr><td>...</td><td>...</td></tr>
+<tr><td>0x2003BFC</td><td>1 号接收方的<strong>等待寄存器 pending</strong>，发送方 4064 - 4095</td></tr>
+<tr><td>0x2004000</td><td>2 号接收方的<strong>领取寄存器 claim</strong></td></tr>
+<tr><td>0x2004004 - 0x2004FFC</td><td>保留</td></tr>
+<tr><td>0x2005000</td><td>2 号接收方的<strong>接收方 UIID 寄存器 receiver_uiid</strong></td></tr>
+<tr><td>0x2005004 - 0x20057FC</td><td>保留</td></tr>
+<tr><td>0x2005800</td><td>2 号接收方的<strong>使能寄存器 enable</strong>，发送方 0 - 31</td></tr>
+<tr><td>0x2005804</td><td>2 号接收方的<strong>使能寄存器 enable</strong>，发送方 32 - 63</td></tr>
+<tr><td>...</td><td>...</td></tr>
+<tr><td>0x20059FC</td><td>2 号接收方的<strong>等待寄存器 pending</strong>，发送方 4064 - 4095</td></tr>
+<tr><td>0x2005A00</td><td>2 号接收方的<strong>等待寄存器 pending</strong>，发送方 0 - 31</td></tr>
+<tr><td>0x2005A04</td><td>2 号接收方的<strong>等待寄存器 pending</strong>，发送方 32 - 63</td></tr>
+<tr><td>...</td><td>...</td></tr>
+<tr><td>0x2005BFC</td><td>2 号接收方的<strong>等待寄存器 pending</strong>，发送方 4064 - 4095</td></tr>
+<tr><td>...</td><td>...</td></tr>
+<tr><td>...</td><td>...</td></tr>
+<tr><td>0x3FFE000</td><td>4095 号接收方的<strong>领取寄存器 claim</strong></td></tr>
+<tr><td>0x3FFE004 - 0x3FFEFFC</td><td>保留</td></tr>
+<tr><td>0x3FFF000</td><td>4095 号接收方的<strong>接收方 UIID 寄存器 receiver_uiid</strong></td></tr>
+<tr><td>0x3FFF004 - 0x3FFF7FC</td><td>保留</td></tr>
+<tr><td>0x3FFF800</td><td>4095 号接收方的<strong>使能寄存器 enable</strong>，发送方 0 - 31</td></tr>
+<tr><td>0x3FFF804</td><td>4095 号接收方的<strong>使能寄存器 enable</strong>，发送方 32 - 63</td></tr>
+<tr><td>...</td><td>...</td></tr>
+<tr><td>0x3FFF9FC</td><td>4095 号接收方的<strong>等待寄存器 pending</strong>，发送方 4064 - 4095</td></tr>
+<tr><td>0x3FFFA00</td><td>4095 号接收方的<strong>等待寄存器 pending</strong>，发送方 0 - 31</td></tr>
+<tr><td>0x3FFFA04</td><td>4095 号接收方的<strong>等待寄存器 pending</strong>，发送方 32 - 63</td></tr>
+<tr><td>...</td><td>...</td></tr>
+<tr><td>0x3FFFBFC</td><td>4095 号接收方的<strong>等待寄存器 pending</strong>，发送方 4064 - 4095</td></tr>
+</tbody></table>
+<h2 id="寄存器读写细节"><a class="header" href="#寄存器读写细节">寄存器读写细节</a></h2>
+<h3 id="使能寄存器-enable"><a class="header" href="#使能寄存器-enable">使能寄存器 enable</a></h3>
+<p>使能寄存器分以同一发送方访问和以同一接收方访问的两部分。通过两部分读写，实际读写的硬件值相同，即在两部分读同一对发送方和接收方对应的位读出的值相同，写入同一对发送方和接收方对应的位效果相同。</p>
+<p>对于以同一发送方访问的部分，考虑发送方 <code>s</code> 的第 <code>i</code> 个地址的 32 位 <code>enable</code> 寄存器，即地址偏移为 0x0000000 + s × 0x2000 + 0x1800 + i × 4 的 32 位寄存器。若不考虑不在 1 到 R-1 间的情况，此寄存器覆盖的接收方编号范围为 <code>32 × i</code> 到 <code>32 × i + 31</code>。</p>
+<p>写入时，对于写入数据的第 <code>j</code> 位，对应的接收方编号为 <code>r = 32 × i + j</code>。</p>
+<ul>
+<li>如果 <code>r</code> 在 <code>1</code> 到 <code>R-1</code> 间，则置 <code>enable[s][r]</code> 为写入的第 <code>j</code> 位。</li>
+<li>否则，第 <code>j</code> 位被忽略。</li>
+</ul>
+<p>读取时，对于读出数据的第 <code>j</code> 位，对应的接收方编号同样为 <code>r = 32 × i + j</code>。</p>
+<ul>
+<li>如果 <code>r</code> 在 <code>0</code> 到 <code>n - 1</code> 间，读出的第 <code>j</code> 位为 <code>enable[s][r]</code>。</li>
+<li>否则，第 <code>j</code> 位为 <code>0</code>。</li>
+</ul>
+<p>对于以同一接收方访问的部分，考虑接收方 <code>r</code> 的第 <code>i</code> 个地址的 32 位 <code>enable</code> 寄存器，即地址偏移为 <code>0x2000000 + r × 0x2000 + 0x1800 + i × 4</code> 的 32 位寄存器。若不考虑不在 <code>1</code> 到 <code>S - 1</code> 间的情况，此寄存器覆盖的发送方编号范围为 <code>32 × i</code> 到 <code>32 × i + 31</code>。</p>
+<p>写入时，对于写入数据的第 <code>j</code> 位，对应的发送方编号为 <code>s = 32 × i + j</code>。</p>
+<ul>
+<li>如果 <code>s</code> 在 <code>1</code> 到 <code>S - 1</code> 间，则置 <code>enable[s][r]</code> 为写入的第 <code>j</code> 位。</li>
+<li>否则，第 <code>j</code> 位被忽略。</li>
+</ul>
+<p>读取时，对于读出数据的第 <code>j</code> 位，对应的接收方编号同样为 <code>s = 32 × i + j</code>。</p>
+<ul>
+<li>如果 <code>s</code> 在 <code>1</code> 到 <code>S - 1</code> 间，读出的第 <code>j</code> 位为 <code>enable[s][r]</code>。</li>
+<li>否则，第 <code>j</code> 位为 <code>0</code>。</li>
+</ul>
+<h3 id="等待寄存器-pending"><a class="header" href="#等待寄存器-pending">等待寄存器 pending</a></h3>
+<p>等待寄存器的读写方式与使能寄存器相同，不过地址偏移中的 <code>0x1800</code> 改为 <code>0x1A00</code>。</p>
+<h3 id="发送方-uiid-寄存器-sender_uiid"><a class="header" href="#发送方-uiid-寄存器-sender_uiid">发送方 UIID 寄存器 sender_uiid</a></h3>
+<p>考虑发送方 <code>s</code> 的发送方 UIID 寄存器。读写此寄存器时直接从 <code>sender_uiid[i]</code> 读出或写入 <code>sender_uiid[i]</code>。</p>
+<h3 id="发送寄存器-send"><a class="header" href="#发送寄存器-send">发送寄存器 send</a></h3>
+<p>和<a href="#%E5%8F%91%E9%80%81%E7%8A%B6%E6%80%81%E5%AF%84%E5%AD%98%E5%99%A8-status">发送状态寄存器 status</a>共用地址，读取此寄存器所在地址的效果见该寄存器描述。</p>
+<p>考虑发送方 <code>s</code> 的发送寄存器。</p>
+<p>写入此寄存器时，设写入的值为 <code>u</code>。如果对于 0 到 R-1 中的接收方编号 <code>r</code>，存在任意一个 <code>r</code> 使得 <code>receiver_uiid[r]</code> 等于 <code>u</code>，则说明 <code>u</code> 对应的接收方进程在硬件线程 <code>r</code> 上运行。此时</p>
+<ul>
+<li>如果 <code>enable[s][r]</code> 为 <code>0</code>，发送失败，置 <code>status[s]</code> 为 <code>0</code>。</li>
+<li>否则 <code>enable[s][r]</code> 为 <code>1</code>，置 <code>pending[s][r]</code> 为 <code>1</code>，发送成功，置 <code>status[s]</code> 为 <code>1</code>。</li>
+</ul>
+<p>如果没有找到这样的 <code>r</code>，则说明 <code>u</code> 对应的接收方进程在在中断控制器上不存在，发送失败，此时</p>
+<ul>
+<li>置 <code>status[s]</code> 为 <code>0</code>。</li>
+</ul>
+<h3 id="发送状态寄存器-status"><a class="header" href="#发送状态寄存器-status">发送状态寄存器 status</a></h3>
+<p>和<a href="#%E5%8F%91%E9%80%81%E5%AF%84%E5%AD%98%E5%99%A8-send">发送寄存器 send</a>共用地址，写入此寄存器所在地址的效果见该寄存器描述。</p>
+<p>考虑发送方 <code>s</code> 的发送状态寄存器。</p>
+<p>读取此寄存器时，返回结果的第 <code>0</code> 位为 <code>status[s]</code>，其余位为 <code>0</code>。</p>
+<!-- ### 撤回寄存器 withdraw
+
+考虑发送方 `s` 的撤回寄存器。
+
+读取此寄存器值时：
+
+- 如果对于 1 到 R-1，存在 `r` 使得 `pending[s][r]` 为 `1`，则读出的值为任意这样的 `r` 对应的 `receiver_uiid[r]`。对于这个 `r`，置 `pending[s][r]` 为 `0`，撤回此中断。
+- 否则不存在这样的 `r`，读出的值为 `0`。
+
+> 即使 `enable[s][r]` 为 `0`，对应的中断仍能被撤回。
+
+写入此寄存器的值会被忽略。 -->
+<h3 id="接收方-uiid-寄存器-receiver_uiid"><a class="header" href="#接收方-uiid-寄存器-receiver_uiid">接收方 UIID 寄存器 receiver_uiid</a></h3>
+<p>考虑接收方 <code>s</code> 的接收方 UIID 寄存器。读写此寄存器时直接从 <code>receiver_uiid[i]</code> 读出或写入 <code>receiver_uiid[i]</code>。</p>
+<h3 id="领取寄存器-claim"><a class="header" href="#领取寄存器-claim">领取寄存器 claim</a></h3>
+<p>考虑接收方 <code>r</code> 的领取寄存器。</p>
+<p>读取此寄存器值时：</p>
+<ul>
+<li>如果对于 1 到 S-1，存在 <code>s</code> 使得 <code>pending[s][r]</code> 且 <code>enable[s][r]</code> 为 <code>1</code>，则读出的值为任意这样的 <code>s</code> 对应的 <code>sender_uiid[s]</code>。对于这个 <code>s</code>，置 <code>pending[s][r]</code> 为 <code>0</code>，领取此中断。</li>
+<li>否则不存在这样的 <code>s</code>，读出的值为 <code>0</code>。</li>
+</ul>
+<p>写入此寄存器的值会被忽略。</p>
+<h3 id="监听寄存器-listen"><a class="header" href="#监听寄存器-listen">监听寄存器 listen</a></h3>
+<p>考虑上下文 <code>c</code> 的监听寄存器。读写此寄存器时直接从 <code>listen[i]</code> 读出或写入 <code>listen[i]</code>。</p>
+<h2 id="csr-中-usip-的设置"><a class="header" href="#csr-中-usip-的设置">CSR 中 USIP 的设置</a></h2>
+<p>CSR <code>xip</code> 中的 USIP 位应为一可读可写位。USIP 可被软件写入，除此之外，对于编号为 <code>c</code> 的上下文对应的硬件线程，令 <code>r = listen[c]</code>，如果 <code>r</code> 在 1 到 R-1 内，且存在 1 到 S-1 的 <code>s</code> 使得 <code>pending[s][r]</code> 和 <code>enable[s][r]</code> 均为 <code>1</code>，则中断控制器发出软件中断，置 USIP 为 <code>1</code>。USIP 的真实值为软件写入的值和中断控制器生成值之或（OR）。因此，如果中断控制器不发出软件中断，可以通过向 USIP 写入 <code>0</code> 清除软件中断。否则如果中断控制器在发出软件中断，向 USIP 写入 <code>0</code> 将不会清除软件中断，读出的值仍为 <code>1</code>。只有领取中断才能清除中断控制器给出的值。</p>
+<h2 id="软件流程"><a class="header" href="#软件流程">软件流程</a></h2>
+<h3 id="槽位申请和配置"><a class="header" href="#槽位申请和配置">槽位申请和配置</a></h3>
+<p>用户进程可以向操作系统申请发送方和接收方槽位。操作系统会将为新分配的槽位分配 UIID，写入对应槽位的 <code>sender_uiid</code> 或 <code>receiver_uiid</code>，并将用户进程可以操作的 4 KiB 页映射给用户进程。</p>
+<blockquote>
+<p>槽位可以作为类似 fd 的资源，或直接用 fd 实现。</p>
+</blockquote>
+<p>用户进程可以申请监听拥有的接收方槽位。此时操作系统将所在硬件线程对应的上下文的 <code>listen</code> 设为此槽位编号。</p>
+<p>用户进程可以申请连接发送方和接收方。操作系统如果决定连接，可以将对应的 <code>enable</code> 置 <code>1</code>。切断类似。</p>
+<h3 id="槽位释放"><a class="header" href="#槽位释放">槽位释放</a></h3>
+<p>释放发送或接收方槽位时，</p>
+<ul>
+<li>解除对应 4 KiB 页映射。</li>
+<li>将对应槽位的 <code>enable</code> 和 <code>pending</code> 全部置 <code>0</code>，可以将释放的发送方槽位已发送的中断以其他方式提供给接收方进程。需要先清空 <code>enable</code> 再清除 <code>pending</code>，避免清空途中新的中断到来。</li>
+<li><code>sender_uiid</code> 或 <code>receiver_uiid</code> 设为无效值。特别是 <code>receiver_uiid</code> 影响中断控制器控制中断发送，必须设为无效值。</li>
+<li>如果是发送方，<code>status</code> 应清空，避免信息泄露。</li>
+</ul>
+<h3 id="中断发送"><a class="header" href="#中断发送">中断发送</a></h3>
+<ol>
+<li>用户进程尝试向自己拥有的发送方槽位的 <code>send</code> 写入接收方 UIID。</li>
+<li>如果用户进程关心发送是否成功，读取 <code>status</code>。如果为 <code>1</code>（非 <code>0</code>），发送成功，否则可以发起系统调用等，要求操作系统立即响应。</li>
+</ol>
+<h3 id="中断处理"><a class="header" href="#中断处理">中断处理</a></h3>
+<ol>
+<li>用户进程确认收到的中断包括用户态跨核软件中断。</li>
+<li>读取此进程设置监听的接收方槽位对应的 <code>claim</code> 获取中断来源。获取一个中断来源后，该来源的中断从中断控制器中清除。</li>
+<li>重复此过程读取其余正在等待的中断，直到返回值为 <code>0</code>，表示已无更多正在等待的中断。此时中断控制器不再置 USIP 为 <code>1</code>。</li>
+</ol>
+<h3 id="操作系统时间片管理"><a class="header" href="#操作系统时间片管理">操作系统时间片管理</a></h3>
+<p>时间片结束时，（可以）设置当前硬件线程的对应上下文的 <code>listen</code> 为无效值。</p>
+<p>时间片开始时，如果即将运行的用户进程监听一个接收方槽位，设置当前硬件线程的对应上下文的 <code>listen</code> 为即将监听的槽位编号。</p>
+<p>另外，操作系统需要管理 <code>USIP</code> 位软件读写的部分等其他用户态中断相关状态。</p>
+<h3 id="操作系统动态配置硬件槽位绑定"><a class="header" href="#操作系统动态配置硬件槽位绑定">操作系统动态配置硬件槽位绑定</a></h3>
+<p>当软件所需收发槽位较多，操作系统允许软件申请的槽位不能全部映射到硬件槽位时，可以考虑在不通知用户进程的情况下，解除槽位绑定或将已解除绑定的槽位重新绑定。</p>
+<p>类似槽位释放时，解除绑定需要</p>
+<ul>
+<li>解除对应 4 KiB 页映射。</li>
+<li>将对应槽位的 <code>enable</code> 和 <code>pending</code> 全部置 <code>0</code>。</li>
+<li><code>sender_uiid</code> 或 <code>receiver_uiid</code> 设为无效值。特别是 <code>receiver_uiid</code> 影响中断控制器控制中断发送，必须设为无效值。</li>
+<li>如果是发送方，<code>status</code> 应清空，避免信息泄露。</li>
+</ul>
+<p>不同于槽位释放，解除绑定需要记录原有信息，包括 <code>enable</code>、<code>pending</code>、<code>status</code> 原有的值等，并记录已发送或将要接收的中断，以其他形式分发。</p>
+<p>此时，操作系统需要处理被解除绑定的进程试图访问槽位造成的 Page Fault、接收方未绑定而发送方绑定导致发送失败后用户进程的请求等清空。</p>
+<p>类似分配槽位时，重新绑定需要</p>
+<ul>
+<li>将对应槽位的 <code>enable</code> 置为正确的值。修改 <code>pending</code> 可作为一种重新分配解除绑定时记录的中断的方式。</li>
+<li>写入 <code>sender_uiid</code> 或 <code>receiver_uiid</code>。</li>
+<li>写入 <code>status</code>。</li>
+<li>添加 4 KiB 页映射。</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="ch2_3_external_interrupt_and_plic.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="ch2_5_user_trap_management.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a rel="prev" href="ch2_3_external_interrupt_and_plic.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a rel="next" href="ch2_5_user_trap_management.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

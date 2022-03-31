@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>QEMU 和 FPGA 中的 N 扩展支持 - Risc-V Extension N Implementation</title>
+        <title>驱动与进程间通信 - Risc-V Extension N Implementation</title>
         
         
 
@@ -98,7 +98,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> 简介</a></li><li class="chapter-item expanded "><a href="ch1_0_background.html"><strong aria-hidden="true">2.</strong> 项目背景与现有工作</a></li><li class="chapter-item expanded "><a href="ch2_0_design.html"><strong aria-hidden="true">3.</strong> 系统设计</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch2_1_n_ext_spec.html"><strong aria-hidden="true">3.1.</strong> N 扩展规范草案</a></li><li class="chapter-item expanded "><a href="ch2_2_user_trap_handle_flow.html"><strong aria-hidden="true">3.2.</strong> 用户态中断的处理流程</a></li><li class="chapter-item expanded "><a href="ch2_3_external_interrupt_and_plic.html"><strong aria-hidden="true">3.3.</strong> 外部中断与 PLIC</a></li><li class="chapter-item expanded "><a href="ch2_4_n_ext_on_qemu_and_fpga.html" class="active"><strong aria-hidden="true">3.4.</strong> QEMU 和 FPGA 中的 N 扩展支持</a></li><li class="chapter-item expanded "><a href="ch2_5_bootloader.html"><strong aria-hidden="true">3.5.</strong> 启动器与 SBI</a></li><li class="chapter-item expanded "><a href="ch2_6_user_trap_management.html"><strong aria-hidden="true">3.6.</strong> 内核对用户态中断的管理</a></li><li class="chapter-item expanded "><a href="ch2_7_user_trap_usage.html"><strong aria-hidden="true">3.7.</strong> 用户态中断扩展的使用</a></li><li class="chapter-item expanded "><a href="ch2_8_rcore_n_smp.html"><strong aria-hidden="true">3.8.</strong> rCore-N 的多核改造</a></li></ol></li><li class="chapter-item expanded "><a href="ch3_0_user_guide.html"><strong aria-hidden="true">4.</strong> 使用教程</a></li><li class="chapter-item expanded "><a href="ch4_0_test_and_demo.html"><strong aria-hidden="true">5.</strong> 系统测试与演示程序</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch4_1_uei_analysis.html"><strong aria-hidden="true">5.1.</strong> 基于用户态外部中断的驱动性能分析</a></li></ol></li><li class="chapter-item expanded "><a href="ch5_0_plan_and_progress.html"><strong aria-hidden="true">6.</strong> 开发计划与进展</a></li><li class="chapter-item expanded "><a href="ch6_0_problem_and_solutions.html"><strong aria-hidden="true">7.</strong> 遇到的主要问题和解决方法</a></li><li class="chapter-item expanded "><a href="ch7_0_cooperation.html"><strong aria-hidden="true">8.</strong> 分工与协作</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="intro.html">简介</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">1.</strong> 项目背景与相关工作</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch1_1_priv_and_trap.html"><strong aria-hidden="true">1.1.</strong> 特权级与陷入</a></li><li class="chapter-item expanded "><a href="ch1_2_driver_and_ipc.html" class="active"><strong aria-hidden="true">1.2.</strong> 驱动与进程间通信</a></li><li class="chapter-item expanded "><a href="ch1_3_x86_uintr.html"><strong aria-hidden="true">1.3.</strong> x86 用户态中断</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">2.</strong> 系统设计</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch2_1_n_ext_spec.html"><strong aria-hidden="true">2.1.</strong> N 扩展规范草案</a></li><li class="chapter-item expanded "><a href="ch2_2_user_trap_handle_flow.html"><strong aria-hidden="true">2.2.</strong> 用户态中断的处理流程</a></li><li class="chapter-item expanded "><a href="ch2_3_external_interrupt_and_plic.html"><strong aria-hidden="true">2.3.</strong> 外部中断与 PLIC</a></li><li class="chapter-item expanded "><a href="ch2_4_software_interrupt_and_uintc.html"><strong aria-hidden="true">2.4.</strong> 软件中断与 UINTC</a></li><li class="chapter-item expanded "><a href="ch2_5_user_trap_management.html"><strong aria-hidden="true">2.5.</strong> 内核对用户态中断的管理</a></li><li class="chapter-item expanded "><a href="ch2_6_user_trap_usage.html"><strong aria-hidden="true">2.6.</strong> 用户态中断扩展的使用</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.</strong> 系统实现</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch3_1_n_ext_on_qemu_and_fpga.html"><strong aria-hidden="true">3.1.</strong> 硬件与模拟器</a></li><li class="chapter-item expanded "><a href="ch3_2_bootloader.html"><strong aria-hidden="true">3.2.</strong> 启动器与 SBI</a></li><li class="chapter-item expanded "><a href="ch3_3_rcore_n_smp.html"><strong aria-hidden="true">3.3.</strong> rCore-N 的多核改造</a></li></ol></li><li class="chapter-item expanded "><a href="ch4_0_test_and_demo.html"><strong aria-hidden="true">4.</strong> 系统测试与演示程序</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch4_1_uei_analysis.html"><strong aria-hidden="true">4.1.</strong> 基于用户态外部中断的驱动性能分析</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.</strong> 项目记录</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch5_0_plan_and_progress.html"><strong aria-hidden="true">5.1.</strong> 开发计划与进展</a></li><li class="chapter-item expanded "><a href="ch5_1_problem_and_solutions.html"><strong aria-hidden="true">5.2.</strong> 遇到的主要问题和解决方法</a></li></ol></li><li class="chapter-item expanded "><a href="ch6_0_user_guide.html"><strong aria-hidden="true">6.</strong> 使用教程</a></li><li class="chapter-item expanded "><a href="ch7_0_cooperation.html"><strong aria-hidden="true">7.</strong> 分工与协作</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -168,42 +168,38 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="硬件与模拟器"><a class="header" href="#硬件与模拟器">硬件与模拟器</a></h1>
-<blockquote>
-<p>本节介绍硬件与模拟器中实现的主要特性</p>
-<p>可以在 <a href="ch1_n_ext_spec.html">N 扩展规范草案</a> 一节看到完整的 N 扩展及相关寄存器描述。在 <a href="ch1_use_of_user_mode_trap.html">用户态中断的使用</a> 一节中看到关于用户态中断使用的描述。</p>
-</blockquote>
-<h2 id="qemu-with-extension-n"><a class="header" href="#qemu-with-extension-n">QEMU with extension N</a></h2>
-<p>出于稳定性考虑，我们选择以 <a href="https://github.com/qemu/qemu/tree/stable-5.0">QEMU 的 5.0 稳定分支</a> 为基础，添加用户态中断所需的寄存器和相应的中断处理函数。</p>
-<p><img src="assets/qemu.png" alt="qemu" /></p>
-<ul>
-<li>添加寄存器 <code>ustatus</code> <code>uip</code> <code>uie</code> <code>sideleg</code> <code>sedeleg</code> <code>uepc</code> <code>utvec</code> <code>ucause</code> <code>utval</code> <code>uscratch</code></li>
-<li>添加用户态中断的触发部分：符合条件时使上述处理器进入中断状态</li>
-<li>实现 <code>uret</code> 指令</li>
-<li>修改 PLIC 以支持用户态外部中断</li>
-<li>添加串口用于测试</li>
-</ul>
-<p>一个使用修改后的 QEMU 进行的用户态中断的简单测试结果：</p>
-<p><img src="assets/user_mode_trap_test.png" alt="user mode trap test" /></p>
-<p>图中的 <code>user soft</code> 为用户态的中断处理程序接收到 <code>user soft interrupt</code> 后输出的信息，<code>user mode</code> 为用户态程序输出的信息。</p>
-<h2 id="labeled-risc-v-n"><a class="header" href="#labeled-risc-v-n">Labeled RISC-V-N</a></h2>
-<p>标签化 RISC-V 架构为中科院计算所包云岗老师团队的研究成果，通过给硬件资源请求附加标签，强化对系统中非托管共享资源（如 LLC、内存带宽等）的控制，降低资源争用时带来的性能波动。该系统使用的 CPU 核心为 Rocket Core，我们在此基础上添加了 N 扩展所需的寄存器、控制逻辑、指令和 PLIC 上下文，但并未使用和修改标签相关的部分；这些修改应当也可以平移到原版的 Rocket Core 中。</p>
-<p>硬件平台使用赛灵思的 ZCU102 开发板，搭载 ZynqMP XCZU9EG 处理芯片。该芯片分为处理系统（PS）和可编程逻辑（PL）两部分，前者具有四个 Arm A53 核心，运行 Linux 系统，我们使用这一部分烧写比特流、将 RISC-V 部分的操作系统和启动器二进制文件加载到 DRAM 中、复位启动 RISC-V 核心。在后者上我们实例化了四个 Rocket Core，支持 RV64IMACN 指令集、MMU、CLINT 和 PLIC，时钟频率 100MHz，具有 2MB 共享 L2 缓存和 2GB DRAM。此外还加入了若干个串口用于与 RISC-V 部分交互以及用户态驱动的演示。</p>
-<p>硬件系统架构图如下：</p>
-<p><img src="assets/hardware.svg" alt="hardware" /></p>
+                        <h1 id="驱动程序与跨进程通信"><a class="header" href="#驱动程序与跨进程通信">驱动程序与跨进程通信</a></h1>
+<h2 id="用户态驱动"><a class="header" href="#用户态驱动">用户态驱动</a></h2>
+<p>在 Linux 系统中，大部分硬件驱动位于内核代码仓库中，与内核共同编译、运行。这种设计在安全性、
+扩展性、可维护性均存在一定的问题。尽管与微内核中，调用驱动需要经过 IPC 的方式相比，
+将驱动放在内核态的性能通常较高，但仍然存在系统调用带来的上下文切换开销，
+在频繁访问外设时会带来显著的性能下降。</p>
+<p>为了进一步提高性能，一些实现方案（如 SPDK ）将硬件驱动完全移入用户态，作为应用程序的一部分。
+通过将外设的内核驱动重新绑定到 uio 或 vfio ，用户进程可以直接访问外设的地址空间，操作外设，
+省去了系统调用和 IPC 的开销。这些方案通常是基于轮询实现的，一个重要原因在于，
+现有的硬件不支持将外设中断交由用户态程序处理。</p>
+<h2 id="linux-中的信号机制"><a class="header" href="#linux-中的信号机制">Linux 中的信号机制</a></h2>
+<p>信号是 Linux 中的一种基本的 IPC 机制，当进程从内核态返回用户态时，如果有待处理的信号，
+内核将在用户栈上构造一个信号上下文，调用用户的信号处理函数；信号处理完成后，由跳板代码再调用
+<code>sys_sigreturn()</code> ，进入内核中，恢复进程的正常执行流的上下文，返回用户态，进程继续执行。</p>
+<p>站在用户程序的视角，信号与中断机制有诸多相似之处：产生的时间不确定、会中断当前执行流、
+通常需要额外的上下文切换。可以说信号是由内核软件模拟的一种中断机制。这种模拟的代价则是多次特权级切换的开销。</p>
+<p>对 IPC 优化的一个重要思路则是在通信路径上减少乃至完全消除内核的参与，例如 XPC 和 SkyBridge
+都设计了方案允许发送方直接切换到接收方的地址空间访问数据和执行代码，同时在正常执行流中仍然保持一定的隔离性。
+我们的方案中则希望应用程序之间的用户态中断的发送和接收可以无需内核介入。</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="ch2_3_external_interrupt_and_plic.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="ch1_1_priv_and_trap.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
                         
-                            <a rel="next" href="ch2_5_bootloader.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="ch1_3_x86_uintr.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -215,13 +211,13 @@
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a rel="prev" href="ch2_3_external_interrupt_and_plic.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="ch1_1_priv_and_trap.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a rel="next" href="ch2_5_bootloader.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="ch1_3_x86_uintr.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 
