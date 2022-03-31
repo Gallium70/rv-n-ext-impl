@@ -1,20 +1,26 @@
 # Summary
 
-- [简介](intro.md)
-- [项目背景与现有工作](ch1_0_background.md)
-- [系统设计](ch2_0_design.md)
+[简介](intro.md)
+
+- 项目背景与相关工作
+  - [特权级与陷入](ch1_1_priv_and_trap.md)
+  - [驱动与进程间通信](ch1_2_driver_and_ipc.md)
+  - [x86 用户态中断](ch1_3_x86_uintr.md)
+- 系统设计
   - [N 扩展规范草案](ch2_1_n_ext_spec.md)
   - [用户态中断的处理流程](ch2_2_user_trap_handle_flow.md)
   - [外部中断与 PLIC](ch2_3_external_interrupt_and_plic.md)
-  - [QEMU 和 FPGA 中的 N 扩展支持](ch2_4_n_ext_on_qemu_and_fpga.md)
-  - [启动器与 SBI](ch2_5_bootloader.md)
-  - [内核对用户态中断的管理](ch2_6_user_trap_management.md)
-  - [用户态中断扩展的使用](ch2_7_user_trap_usage.md)
-  - [rCore-N 的多核改造](ch2_8_rcore_n_smp.md)
-  - [用户态跨核中断控制器方案设计](ch2_9_uipi.md)
-- [使用教程](ch3_0_user_guide.md)
+  - [软件中断与 UINTC](ch2_4_software_interrupt_and_uintc.md)
+  - [内核对用户态中断的管理](ch2_5_user_trap_management.md)
+  - [用户态中断扩展的使用](ch2_6_user_trap_usage.md)
+- 系统实现
+  - [硬件与模拟器](ch3_1_n_ext_on_qemu_and_fpga.md)
+  - [启动器与 SBI](ch3_2_bootloader.md)
+  - [rCore-N 的多核改造](ch3_3_rcore_n_smp.md)
 - [系统测试与演示程序](ch4_0_test_and_demo.md)
   - [基于用户态外部中断的驱动性能分析](ch4_1_uei_analysis.md)
-- [开发计划与进展](ch5_0_plan_and_progress.md)
-- [遇到的主要问题和解决方法](ch6_0_problem_and_solutions.md)
+- 项目记录
+  - [开发计划与进展](ch5_0_plan_and_progress.md)
+  - [遇到的主要问题和解决方法](ch5_1_problem_and_solutions.md)
+- [使用教程](ch6_0_user_guide.md)
 - [分工与协作](ch7_0_cooperation.md)
