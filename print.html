@@ -299,8 +299,52 @@ M 态也不会进入中断处理程序。</p>
 <p>对 IPC 优化的一个重要思路则是在通信路径上减少乃至完全消除内核的参与，例如 XPC 和 SkyBridge
 都设计了方案允许发送方直接切换到接收方的地址空间访问数据和执行代码，同时在正常执行流中仍然保持一定的隔离性。
 我们的方案中则希望应用程序之间的用户态中断的发送和接收可以无需内核介入。</p>
-<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="x86-用户态中断-wip"><a class="header" href="#x86-用户态中断-wip">x86 用户态中断 (WIP)</a></h1>
-<p>Intel 提出了一套用户态中断的机制，</p>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="x86-用户态中断-uintr-wip"><a class="header" href="#x86-用户态中断-uintr-wip">x86 用户态中断 (uintr) (WIP)</a></h1>
+<p>Intel 在 2021 年 5 月发布的 Intel 指令集架构拓展中加入了 x86 平台上的用户态中断规范，
+在 2022 H1 发布的 Sapphire Rapids 系列处理器中提供了硬件实现。在硬件架构上，
+中断接收方是用户空间的任务，而发送方可以是另一个用户任务、内核或外部设备。目前 Intel
+的团队在 Linux 内核中实现了用户态任务之间的中断机制。</p>
+<h2 id="概述"><a class="header" href="#概述">概述</a></h2>
+<p>用户态中断被定义为架构中的新事件，可以在 CPL=3 的 64 位模式下传递给软件进行处理，而不需要改变段状态。
+不同的用户中断通过一个 6 位的用户中断向量区分，在传递中断时被压到栈上。新增的 UIRET（用户中断返回）
+指令用于退出中断处理上下文。</p>
+<p>用户中断架构由新的内核管理的状态进行配置，这个状态包括新的 MSR ，在内核切换线程时进行更新。</p>
+<p>其中一个 MSR 指向名为<strong>用户发布中断描述符 (User Posted Interrupt Descriptor, UPID)</strong> 的数据结构，
+用户态中断可以发布到与某个线程关联的 UPID 中。在接收到一个普通中断后，处理器将根据 UPID
+中的内容将其识别为用户态中断并传递给软件，这一过程名为<strong>用户中断通知</strong>。</p>
+<p>系统软件可以定义用于发布用户中断和发送用户中断通知的操作。用户中断架构定义了一条新指令 <code>SENDUIPI</code> ，
+应用软件可以使用这条指令发送处理器间用户中断（用户态 IPI ）。执行 <code>SENDUIPI</code> 指令时，
+处理器会根据<strong>用户中断目标表 (User Interrupt Target Table, UITT)</strong> 的内容，
+在相应 UPID 中发布一个用户中断，并发送一个用户中断通知。</p>
+<h2 id="用户态中断状态"><a class="header" href="#用户态中断状态">用户态中断状态</a></h2>
+<table><thead><tr><th>状态名</th><th>全称</th><th>描述</th></tr></thead><tbody>
+<tr><td>UIRR</td><td>Uintr Request Register</td><td>某位为 1 表示对应下标的用户态中断待处理</td></tr>
+<tr><td>UIF</td><td>Uintr Flag</td><td>用户态中断使能</td></tr>
+<tr><td>UIHANDLER</td><td>Uintr Handler</td><td>中断处理函数入口地址</td></tr>
+<tr><td>UISTACKADJUST</td><td>Uintr Stack Adjustment</td><td>中断处理栈的基址或偏移量</td></tr>
+<tr><td>UINV</td><td>Uintr Notification Vector</td><td>识别为用户态中断处理的中断编号</td></tr>
+<tr><td>UPIDADDR</td><td>UPID Address</td><td>UPID 的地址</td></tr>
+<tr><td>UITTADDR</td><td>UITT Address</td><td>UITT 的地址，用于 <code>SENDUIPI</code></td></tr>
+<tr><td>UITTSZ</td><td>UITT Size</td><td>UITT 的大小</td></tr>
+</tbody></table>
+<p>以下新增的 MSR 用于保存用户态中断的状态：</p>
+<table><thead><tr><th>MSR</th><th>地址</th><th>状态内容</th></tr></thead><tbody>
+<tr><td>IA32_UINTR_RR</td><td>985H</td><td>UIRR</td></tr>
+<tr><td>IA32_UINTR_HANDLER</td><td>986H</td><td>UIHANDLER</td></tr>
+<tr><td>IA32_UINTR_STACKADJUST</td><td>987H</td><td>UISTACKADJUST</td></tr>
+<tr><td>IA32_UINTR_MISC</td><td>988H</td><td>UITTSZ, UINV</td></tr>
+<tr><td>IA32_UINTR_PD</td><td>989H</td><td>UPIDADDR</td></tr>
+<tr><td>IA32_UINTR_TT</td><td>98AH</td><td>UITTADDR</td></tr>
+</tbody></table>
+<h2 id="中断传递和处理"><a class="header" href="#中断传递和处理">中断传递和处理</a></h2>
+<p>处理流程图如下：</p>
+<p><img src="assets/intel-uintr/deliver.svg" alt="d" /></p>
+<h2 id="中断通知"><a class="header" href="#中断通知">中断通知</a></h2>
+<p><img src="assets/intel-uintr/notification.svg" alt="n" /></p>
+<h2 id="发送用户态跨核中断"><a class="header" href="#发送用户态跨核中断">发送用户态跨核中断</a></h2>
+<p><img src="assets/intel-uintr/senduipi.svg" alt="s" /></p>
+<h2 id="内核数据结构"><a class="header" href="#内核数据结构">内核数据结构</a></h2>
+<p><img src="assets/intel-uintr/struct.svg" alt="s" /></p>
 <div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="n-扩展规范草案----omit-in-toc---"><a class="header" href="#n-扩展规范草案----omit-in-toc---">N 扩展规范草案 <!-- omit in toc --></a></h1>
 <p>本节描述 N 扩展的 CPU 设计规范草案，即支持 N 扩展的 CPU 需要添加哪些寄存器和指令。关于用户态中断的流程和使用请参见后文。</p>
 <blockquote>
@@ -1163,23 +1207,32 @@ just build
 <p>修改 <a href="../../rCore-N/user/Makefile">user 文件夹中的 Makefile</a>，将第 14 行的 board_qemu 改为 board_lrv ，然后在 os 文件夹中执行 <code>just build_lrv</code> （或按需设置日志等级），编译好的二进制文件为 rCore-N/os/target/riscv64imac-unknown-none-elf/debug/os.bin 和 rcore-n.bin，二者内容完全一致。</p>
 <h3 id="在-fpga-上运行"><a class="header" href="#在-fpga-上运行">在 FPGA 上运行</a></h3>
 <p>将 lrv-rust-bl.bin 和 rcore-n.bin 复制到 FPGA 的 Arm Linux 中，使用<a href="https://github.com/Gallium70/labeled-RISC-V-boot">标签 RISC-V 启动脚本</a>启动 RISC-V 部分。</p>
-<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="分工协作"><a class="header" href="#分工协作">分工协作</a></h1>
-<p>贺鲲鹏：</p>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="分工与协作"><a class="header" href="#分工与协作">分工与协作</a></h1>
+<h2 id="贺鲲鹏"><a class="header" href="#贺鲲鹏">贺鲲鹏</a></h2>
 <ul>
-<li>扩展规范草案</li>
+<li>N 扩展规范草案完善</li>
 <li>用户态中断处理流程</li>
-<li>QEMU 修改</li>
+<li>N 扩展 QEMU 实现</li>
+<li>PLIC-U QEMU 实现</li>
 <li>rCore-N 多核改造</li>
 <li>PLIC 和串口底层驱动</li>
 </ul>
-<p>尤予阳：</p>
+<h2 id="尤予阳"><a class="header" href="#尤予阳">尤予阳</a></h2>
 <ul>
-<li>FPGA 修改</li>
+<li>N 扩展 FPGA 实现</li>
+<li>PLIC-U FPGA 实现</li>
 <li>FPGA 启动器编写</li>
 <li>rCore-N 移植</li>
 <li>内核对用户态中断管理机制</li>
 <li>演示程序</li>
 <li>使用教程编写</li>
+<li>内核和用户态的串口驱动程序</li>
+<li>性能追踪记录</li>
+</ul>
+<h2 id="余泰来"><a class="header" href="#余泰来">余泰来</a></h2>
+<ul>
+<li>UINTC 规范设计</li>
+<li>UINTC QEMU 实现</li>
 </ul>
 
                     </main>

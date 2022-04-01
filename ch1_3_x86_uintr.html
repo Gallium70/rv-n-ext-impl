@@ -168,8 +168,52 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="x86-用户态中断-wip"><a class="header" href="#x86-用户态中断-wip">x86 用户态中断 (WIP)</a></h1>
-<p>Intel 提出了一套用户态中断的机制，</p>
+                        <h1 id="x86-用户态中断-uintr-wip"><a class="header" href="#x86-用户态中断-uintr-wip">x86 用户态中断 (uintr) (WIP)</a></h1>
+<p>Intel 在 2021 年 5 月发布的 Intel 指令集架构拓展中加入了 x86 平台上的用户态中断规范，
+在 2022 H1 发布的 Sapphire Rapids 系列处理器中提供了硬件实现。在硬件架构上，
+中断接收方是用户空间的任务，而发送方可以是另一个用户任务、内核或外部设备。目前 Intel
+的团队在 Linux 内核中实现了用户态任务之间的中断机制。</p>
+<h2 id="概述"><a class="header" href="#概述">概述</a></h2>
+<p>用户态中断被定义为架构中的新事件，可以在 CPL=3 的 64 位模式下传递给软件进行处理，而不需要改变段状态。
+不同的用户中断通过一个 6 位的用户中断向量区分，在传递中断时被压到栈上。新增的 UIRET（用户中断返回）
+指令用于退出中断处理上下文。</p>
+<p>用户中断架构由新的内核管理的状态进行配置，这个状态包括新的 MSR ，在内核切换线程时进行更新。</p>
+<p>其中一个 MSR 指向名为<strong>用户发布中断描述符 (User Posted Interrupt Descriptor, UPID)</strong> 的数据结构，
+用户态中断可以发布到与某个线程关联的 UPID 中。在接收到一个普通中断后，处理器将根据 UPID
+中的内容将其识别为用户态中断并传递给软件，这一过程名为<strong>用户中断通知</strong>。</p>
+<p>系统软件可以定义用于发布用户中断和发送用户中断通知的操作。用户中断架构定义了一条新指令 <code>SENDUIPI</code> ，
+应用软件可以使用这条指令发送处理器间用户中断（用户态 IPI ）。执行 <code>SENDUIPI</code> 指令时，
+处理器会根据<strong>用户中断目标表 (User Interrupt Target Table, UITT)</strong> 的内容，
+在相应 UPID 中发布一个用户中断，并发送一个用户中断通知。</p>
+<h2 id="用户态中断状态"><a class="header" href="#用户态中断状态">用户态中断状态</a></h2>
+<table><thead><tr><th>状态名</th><th>全称</th><th>描述</th></tr></thead><tbody>
+<tr><td>UIRR</td><td>Uintr Request Register</td><td>某位为 1 表示对应下标的用户态中断待处理</td></tr>
+<tr><td>UIF</td><td>Uintr Flag</td><td>用户态中断使能</td></tr>
+<tr><td>UIHANDLER</td><td>Uintr Handler</td><td>中断处理函数入口地址</td></tr>
+<tr><td>UISTACKADJUST</td><td>Uintr Stack Adjustment</td><td>中断处理栈的基址或偏移量</td></tr>
+<tr><td>UINV</td><td>Uintr Notification Vector</td><td>识别为用户态中断处理的中断编号</td></tr>
+<tr><td>UPIDADDR</td><td>UPID Address</td><td>UPID 的地址</td></tr>
+<tr><td>UITTADDR</td><td>UITT Address</td><td>UITT 的地址，用于 <code>SENDUIPI</code></td></tr>
+<tr><td>UITTSZ</td><td>UITT Size</td><td>UITT 的大小</td></tr>
+</tbody></table>
+<p>以下新增的 MSR 用于保存用户态中断的状态：</p>
+<table><thead><tr><th>MSR</th><th>地址</th><th>状态内容</th></tr></thead><tbody>
+<tr><td>IA32_UINTR_RR</td><td>985H</td><td>UIRR</td></tr>
+<tr><td>IA32_UINTR_HANDLER</td><td>986H</td><td>UIHANDLER</td></tr>
+<tr><td>IA32_UINTR_STACKADJUST</td><td>987H</td><td>UISTACKADJUST</td></tr>
+<tr><td>IA32_UINTR_MISC</td><td>988H</td><td>UITTSZ, UINV</td></tr>
+<tr><td>IA32_UINTR_PD</td><td>989H</td><td>UPIDADDR</td></tr>
+<tr><td>IA32_UINTR_TT</td><td>98AH</td><td>UITTADDR</td></tr>
+</tbody></table>
+<h2 id="中断传递和处理"><a class="header" href="#中断传递和处理">中断传递和处理</a></h2>
+<p>处理流程图如下：</p>
+<p><img src="assets/intel-uintr/deliver.svg" alt="d" /></p>
+<h2 id="中断通知"><a class="header" href="#中断通知">中断通知</a></h2>
+<p><img src="assets/intel-uintr/notification.svg" alt="n" /></p>
+<h2 id="发送用户态跨核中断"><a class="header" href="#发送用户态跨核中断">发送用户态跨核中断</a></h2>
+<p><img src="assets/intel-uintr/senduipi.svg" alt="s" /></p>
+<h2 id="内核数据结构"><a class="header" href="#内核数据结构">内核数据结构</a></h2>
+<p><img src="assets/intel-uintr/struct.svg" alt="s" /></p>
 
                     </main>
 
