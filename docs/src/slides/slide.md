@@ -68,8 +68,8 @@ size: 4:3
 - 将中断导入用户空间的任务，上中断源可以是硬件、内核或另一个用户任务
 - 在 Sapphire Rapids 系列处理器中支持用户态跨核中断
 
-![bg contain right](../assets/intel-uintr/deliver.png)
-![bg contain](../assets/intel-uintr/senduipi.png)
+![bg contain right](../assets/intel-uintr/deliver.svg)
+![bg contain](../assets/intel-uintr/senduipi.svg)
 
 ---
 
@@ -78,7 +78,7 @@ size: 4:3
 - 发送的中断会导入内存中的数据结构，且若目标任务正在运行，可立刻处理，不进入内核
 - 设计思路可能源于 VT-d 的 Interrupt Posting 扩展，后者允许将中断直接导入虚拟机
 
-![bg contain right](../assets/intel-uintr/struct.png)
+![bg contain right](../assets/intel-uintr/struct.svg)
 
 ---
 
