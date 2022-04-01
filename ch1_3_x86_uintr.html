@@ -178,7 +178,7 @@
 不同的用户中断通过一个 6 位的用户中断向量区分，在传递中断时被压到栈上。新增的 UIRET（用户中断返回）
 指令用于退出中断处理上下文。</p>
 <p>用户中断架构由新的内核管理的状态进行配置，这个状态包括新的 MSR ，在内核切换线程时进行更新。</p>
-<p>其中一个 MSR 指向名为<strong>用户发布中断描述符 (User Posted Interrupt Descriptor, UPID)</strong> 的数据结构，
+<p>其中一个 MSR 指向名为<strong>用户态中断发布描述符 (User Posted Interrupt Descriptor, UPID)</strong> 的数据结构，
 用户态中断可以发布到与某个线程关联的 UPID 中。在接收到一个普通中断后，处理器将根据 UPID
 中的内容将其识别为用户态中断并传递给软件，这一过程名为<strong>用户中断通知</strong>。</p>
 <p>系统软件可以定义用于发布用户中断和发送用户中断通知的操作。用户中断架构定义了一条新指令 <code>SENDUIPI</code> ，
@@ -205,10 +205,43 @@
 <tr><td>IA32_UINTR_PD</td><td>989H</td><td>UPIDADDR</td></tr>
 <tr><td>IA32_UINTR_TT</td><td>98AH</td><td>UITTADDR</td></tr>
 </tbody></table>
-<h2 id="中断传递和处理"><a class="header" href="#中断传递和处理">中断传递和处理</a></h2>
-<p>处理流程图如下：</p>
-<p><img src="assets/intel-uintr/deliver.svg" alt="d" /></p>
-<h2 id="中断通知"><a class="header" href="#中断通知">中断通知</a></h2>
+<h2 id="uintr-传递和处理"><a class="header" href="#uintr-传递和处理">Uintr 传递和处理</a></h2>
+<p>当 <code>UIRR != 0</code> 时即表示有未处理的用户态中断，任何更新 UIRR 的行为都会触发处理器的用户态中断识别流程，
+如直接写入 <code>IA32_UINTR_RR</code> 寄存器、Uintr 传递、通知、VMX 转换等。如果 <code>CR4.UINTR == 1</code>
+且处理器识别到了未处理的用户态中断，在满足下列条件时，处理器就会将中断传递到指令边界上：</p>
+<ol>
+<li><code>UIF == 1</code></li>
+<li>没有阻塞中的 <code>MOC SS</code> 或 <code>POP SS</code> 操作</li>
+<li><code>CPL == 3</code></li>
+<li><code>IA32_EFER.LMA == CS.L == 1</code> ，即处理器处于 64 位模式</li>
+<li>软件没有运行在 Enclave 中</li>
+</ol>
+<p>用户态中断的优先级仅低于普通中断，它会将处理器从 <code>TPAUSE</code> 和 <code>UMWAIT</code> 指令的状态中唤醒，
+但不会唤醒处于关闭或等待 SIPI 状态的处理器。用户态中断不会改变 CPL ，其传递流程图如下：</p>
+<p><img src="assets/intel-uintr/delivery.svg" alt="d" /></p>
+<p>如果 <code>UISTACKADJUST[0] == 0</code> ，中断传递流程会将 <code>RSP</code> 减去 <code>UISTACKADJUST</code> ，否则会将
+<code>RSP</code> 替换为 <code>UISTACKADJUST</code> 。传递流程总是将 <code>RSP</code> 对齐到 16 字节边界。</p>
+<p>Uintr 的传递会使进行中的事务操作放弃，并返回到非事务操作的执行环境。事务放弃会加载 <code>EAX</code> ，
+如同被普通中断打断一样。Uintr 在事务放弃处理完之后传递。</p>
+<p>Uintr 传递对栈的访问可能触发异常，这些异常处理之前 <code>RSP</code> 会恢复到之前的值，如果这些异常产生了一个使用 EXT
+位的错误码，该位会被清除。产生这种异常时， UIRR 不会更新， UIF 不会清除，在异常处理完成之后，
+处理器会继续识别和传递先前的 Uintr。</p>
+<p>如果控制流强化 (control-flow enforcement technology, CET) 的影子栈功能在 <code>CPL == 3</code> 时被启用，
+Uintr 传递会将返回指令的指针推入影子栈中。如果间接分支追踪特性被启用， Uintr
+传递会将间接分支追踪器转移到 <code>WAIT_FOR_ENDBRANCH</code> 状态； Uintr 处理函数的第一条指令应当是 <code>ENDBR64</code> 。</p>
+<h2 id="uintr-通知"><a class="header" href="#uintr-通知">Uintr 通知</a></h2>
+<p><strong>用户态中断发布</strong>是平台主体或 CPU 上运行的软件将用户态中断记录到内存中的<strong>用户态中断发布描述符</strong> (UPID)
+的过程。平台主体或软件可以向中断目标正在运行的逻辑处理器发送一个普通中断，该中断称作<strong>用户态中断通知</strong>。</p>
+<p>UPID 的结构定义如下：</p>
+<table><thead><tr><th>位</th><th>名称</th><th>描述</th></tr></thead><tbody>
+<tr><td>0</td><td>待处理通知</td><td>若该位被置位表示 PIR 中有一个或多个待处理的 Uintr 通知</td></tr>
+<tr><td>1</td><td>抑制通知</td><td>该位被置位，平台主体向此描述符发布中断时不应发送通知</td></tr>
+<tr><td>15:2</td><td>预留</td><td>通知过程会忽略这些位， <code>SENDUIPI</code> 要求这些位为 0</td></tr>
+<tr><td>23:16</td><td>通知向量</td><td>由 <code>SENDUIPI</code> 使用</td></tr>
+<tr><td>31:24</td><td>预留</td><td>通知过程会忽略这些位， <code>SENDUIPI</code> 要求这些位为 0</td></tr>
+<tr><td>63:32</td><td>通知目标</td><td>目标的物理 APIC ID，由 <code>SENDUIPI</code> 使用。在 xAPIC 模式下，第 47:40 位为 8 位 APIC ID；在 x2APIC 模式，该域为 32 位 APIC ID</td></tr>
+<tr><td>127：64</td><td>发布的中断请求</td><td>每一个中断向量对应一位，如果该位为 1 表示有相应编号的用户态中断请求</td></tr>
+</tbody></table>
 <p><img src="assets/intel-uintr/notification.svg" alt="n" /></p>
 <h2 id="发送用户态跨核中断"><a class="header" href="#发送用户态跨核中断">发送用户态跨核中断</a></h2>
 <p><img src="assets/intel-uintr/senduipi.svg" alt="s" /></p>
