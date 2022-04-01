@@ -13,7 +13,7 @@ Intel 在 2021 年 5 月发布的 Intel 指令集架构拓展中加入了 x86 �
 
 用户中断架构由新的内核管理的状态进行配置，这个状态包括新的 MSR ，在内核切换线程时进行更新。
 
-其中一个 MSR 指向名为**用户发布中断描述符 (User Posted Interrupt Descriptor, UPID)** 的数据结构，
+其中一个 MSR 指向名为**用户态中断发布描述符 (User Posted Interrupt Descriptor, UPID)** 的数据结构，
 用户态中断可以发布到与某个线程关联的 UPID 中。在接收到一个普通中断后，处理器将根据 UPID
 中的内容将其识别为用户态中断并传递给软件，这一过程名为**用户中断通知**。
 
@@ -46,13 +46,38 @@ Intel 在 2021 年 5 月发布的 Intel 指令集架构拓展中加入了 x86 �
 | IA32_UINTR_PD          | 989H | UPIDADDR      |
 | IA32_UINTR_TT          | 98AH | UITTADDR      |
 
-## 中断传递和处理
+## Uintr 传递和处理
 
-处理流程图如下：
+当 `UIRR != 0` 时即表示有未处理的用户态中断，任何更新 UIRR 的行为都会触发处理器的用户态中断识别流程，
+如直接写入 `IA32_UINTR_RR` 寄存器、Uintr 传递、通知、VMX 转换等。如果 `CR4.UINTR == 1`
+且处理器识别到了未处理的用户态中断，在满足下列条件时，处理器就会将中断传递到指令边界上：
 
-![d](assets/intel-uintr/deliver.svg)
+1. `UIF == 1`
+2. 没有阻塞中的 `MOC SS` 或 `POP SS` 操作
+3. `CPL == 3`
+4. `IA32_EFER.LMA == CS.L == 1` ，即处理器处于 64 位模式
+5. 软件没有运行在 Enclave 中
 
-## 中断通知
+用户态中断的优先级仅低于普通中断，它会将处理器从 `TPAUSE` 和 `UMWAIT` 指令的状态中唤醒，
+但不会唤醒处于关闭或等待 SIPI 状态的处理器。用户态中断不会改变 CPL ，其传递流程图如下：
+
+![d](assets/intel-uintr/delivery.svg)
+
+如果 `UISTACKADJUST[0] == 0` ，中断传递流程会将 `RSP` 减去 `UISTACKADJUST` ，否则会将
+`RSP` 替换为 `UISTACKADJUST` 。传递流程总是将 `RSP` 对齐到 16 字节边界。
+
+Uintr 的传递会使进行中的事务操作放弃，并返回到非事务操作的执行环境。事务放弃会加载 `EAX` ，
+如同被普通中断打断一样。Uintr 在事务放弃处理完之后传递。
+
+Uintr 传递对栈的访问可能触发异常，这些异常处理之前 `RSP` 会恢复到之前的值，如果这些异常产生了一个使用 EXT
+位的错误码，该位会被清除。产生这种异常时， UIRR 不会更新， UIF 不会清除，在异常处理完成之后，
+处理器会继续识别和传递先前的 Uintr。
+
+如果控制流强化 (control-flow enforcement technology, CET) 的影子栈功能在 `CPL == 3` 时被启用，
+Uintr 传递会将返回指令的指针推入影子栈中。如果间接分支追踪特性被启用， Uintr
+传递会将间接分支追踪器转移到 `WAIT_FOR_ENDBRANCH` 状态； Uintr 处理函数的第一条指令应当是 `ENDBR64` 。
+
+## Uintr 通知
 
 ![n](assets/intel-uintr/notification.svg)
 
